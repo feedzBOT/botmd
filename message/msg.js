@@ -29,7 +29,6 @@ const ms = require("parse-ms");
 
 // Correct
 const words = JSON.parse(fs.readFileSync('./src/correct.json'))
-const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 
 // Exif
 const Exif = require("../lib/exif")
@@ -88,7 +87,8 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 		const isGroupAdmins = groupAdmins.includes(sender)
-        const isWelkom = isGroup ? welkom.includes(from) : false
+        const isWelcome = isGroup ? welcome.includes(from) : false
+        const isLeft = isGroup ? left.includes(from) : false
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -902,20 +902,39 @@ ${tu}`
             if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
 			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
 			if (!isGroup) return reply(mess.OnlyGrup)
-			if (args.length < 1) return reply('ngapain?')
-	    	if (Number(args[0]) === 1) {
-	    	if (isWelkom) return reply('udah aktif kak')
-			welkom.push(from)
-			fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-			reply('succes mengaktifkan fitur welcome di group ini!')
-			} else if (Number(args[0]) === 0) {
-	    	welkom.splice(from, 1)
-			fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-		    reply('succes menonaktifkan fitur welcome di group ini!')
-			} else {
-	        reply('1 untuk mengaktifkan, 0 untuk menonaktifkan')
-			}
-			break
+			if (args.length === 1) return reply(`Pilih enable atau disable kak?`)
+            if (args[1].toLowerCase() === 'enable'){
+            if (isWelcome) return reply(`Udah aktif`)
+            welcome.push(from)
+			fs.writeFileSync('./src/welcome.json', JSON.stringify(welcome))
+			reply('welcome enable')
+            } else if (args[1].toLowerCase() === 'disable'){
+            let anu = welcome.indexOf(from)
+            welcome.splice(anu, 1)
+            fs.writeFileSync('./src/welcome.json', JSON.stringify(welcome))
+            reply('welcome disable')
+            } else {
+            reply(`pilih enable atau disable kak?`)
+            }
+            break
+            if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
+			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
+			if (!isGroup) return reply(mess.OnlyGrup)
+            if (args.length === 1) return reply(`pilih enable atau disable kak?`)
+            if (args[1].toLowerCase() === 'enable'){
+            if (isLeft) return reply(`udah aktif`)
+            left.push(from)
+	    	fs.writeFileSync('./src/left.json', JSON.stringify(left))
+			reply('left enable')
+            } else if (args[1].toLowerCase() === 'disable'){
+            let anu = left.indexOf(from)
+            left.splice(anu, 1)
+            fs.writeFileSync('./src/left.json', JSON.stringify(left))
+            reply('left disable')
+            } else {
+            reply(`Pilih enable atau disable kak?`)
+            }
+            break          
 			case prefix+'grupwa': case prefix+'searchgrup':
 			if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
@@ -1228,9 +1247,9 @@ ${tu}`
                 break
 			case prefix+'limit': case prefix+'balance':
 			case prefix+'ceklimit': case prefix+'cekbalance':
-			    if (mentioned.length !== 0){
-					var Ystatus = ownerNumber.includes(mentioned[0])
-					var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
+               if (mentioned.length !== 0){
+		var Ystatus = ownerNumber.includes(mentioned[0])
+          	var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
 				    var ggcount = isPrim ? gcounti.prem : gcounti.user
                     var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
                     textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
