@@ -29,6 +29,7 @@ const ms = require("parse-ms");
 
 // Correct
 const words = JSON.parse(fs.readFileSync('./src/correct.json'))
+const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 
 // Exif
 const Exif = require("../lib/exif")
@@ -87,6 +88,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 		const isGroupAdmins = groupAdmins.includes(sender)
+        const isWelkom = isGroup ? welkom.includes(from) : false
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -260,6 +262,51 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const isQuotedVideo = isQuotedMsg ? content.includes('videoMessage') ? true : false : false
 		const isQuotedSticker = isQuotedMsg ? content.includes('stickerMessage') ? true : false : false
 
+
+
+
+
+        //welcome hafidz
+        client.on('group-participants-update', async (anu) => {
+		if (!welkom.includes(anu.jid)) return
+		try {
+			const mdata = await conn.groupMetadata(anu.jid)
+			console.log(anu)
+			if (anu.action == 'add') {
+				num = anu.participants[0]
+				try {
+					ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+				} catch {
+					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
+				}
+				teks = `Hallo @${num.split('@')[0]} \Selamat datang di group *${mdata.subject}* 
+╭━━━━━━━━━━━━━
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *NAME:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *UMUR:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *ASKOT:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *GENDER:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *INSTAGRAM:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *FAVORIT:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *HOBBY:*
+╰━━━━━━━━━━━━━
+  *[NOTE]*\n\nBaca Deskripsi grup!`
+				let buffer = await getBuffer(ppimg)
+				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+			} else if (anu.action == 'remove') {
+				num = anu.participants[0]
+				try {
+					ppimg = await client.getProfilePicture(`${num.split('@')[0]}@c.us`)
+				} catch {
+					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
+				}
+				teks = `*「 🚮 」Bacakan Ya-siin Buat Saudara Kita Yang Keluar Dari Group, Semoga Amal Dan Ibadahnya Di Terima Di Sisi Tuhan...*@${num.split('@')[0]}`
+				let buffer = await getBuffer(ppimg)
+    	conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+		}
+		} catch (e) {
+     	console.log('Error : %s', color(e, 'red'))
+		}
+	    })
 		// Anti link
         if (isGroup && !isOwner && !isGroupAdmins && isBotGroupAdmins) {
             var AntiLink = await db.showdata('antilink', {
@@ -850,22 +897,41 @@ ${tu}`
 				}).catch(() => reply(`Judul lagu tidak ditemukan`))
 				limitAdd(sender, limit)
 				break
+             //grup
+            case prefix+'welcome':
+            if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
+			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
+			if (!isGroup) return reply(mess.OnlyGrup)
+			if (args.length < 1) return reply('ngapain?')
+	    	if (Number(args[0]) === 1) {
+	    	if (isWelkom) return reply('udah aktif kak')
+			welkom.push(from)
+			fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+			reply('succes mengaktifkan fitur welcome di group ini!')
+			} else if (Number(args[0]) === 0) {
+	    	welkom.splice(from, 1)
+			fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+		    reply('succes menonaktifkan fitur welcome di group ini!')
+			} else {
+	        reply('1 untuk mengaktifkan, 0 untuk menonaktifkan')
+			}
+			break
 			case prefix+'grupwa': case prefix+'searchgrup':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
-				reply(mess.wait)
-			    hxz.linkwa(q).then(async(data) => {
-				  if (data.length == 0) return reply(`Grup ${q} tidak ditemukan`)
-				  var teks = `*Hasil Pencarian Dari ${q}*\n\n`
-				  for (let x of data) {
-					teks += `*Nama :* ${x.nama}\n*Link :* ${x.link}\n\n`
-				  }
-				  reply(teks)
-				  limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'pinterest':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			lif (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
+			reply(mess.wait)
+			hxz.linkwa(q).then(async(data) => {
+		    if (data.length == 0) return reply(`Grup ${q} tidak ditemukan`)
+	        var teks = `*Hasil Pencarian Dari ${q}*\n\n`
+		    for (let x of data) {
+			teks += `*Nama :* ${x.nama}\n*Link :* ${x.link}\n\n`
+	        }
+		   reply(teks)
+	       limitAdd(sender, limit)
+	  	   }).catch(() => reply(mess.error.api))
+	       break
+	       case prefix+'pinterest':
+	       if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} query atau ${command} query --jumlah\nContoh :\n${command} cecan atau ${command} cecan --5`)
 				reply(mess.wait)
 			    var jumlah;
