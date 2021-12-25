@@ -267,7 +267,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 
 
         //welcome hafidz
-        conn.on('group-participants-update', async (anu) => {
+        conn.groupParticipantsUpdate(async (anu) => {
 		if (!welkom.includes(anu.jid)) return
 		try {
 			const mdata = await conn.groupMetadata(anu.jid)
