@@ -1,0 +1,13 @@
+{
+  "ownerNumber": ["6289504585790@s.whatsapp.net","1209208290@s.whatsapp.net"],
+  "ownerName": ["r"],
+  "botName": "Simple Bot WhatsApp",
+  "sessionName": "adi",
+  "pathimg": "./media/bot.jpg",
+  "gamewaktu": 90,
+  "limitCount": 20,
+  "gcount": {
+	"prem": 100,
+	"user": 15
+  }
+}
