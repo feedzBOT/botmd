@@ -424,13 +424,9 @@ conn.sendMessage(from, { image: { url: gopeynya }, caption: teksnya }, { quoted:
                 break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
-			      sendContact(from, x.split('@s.whatsapp.net')[0], 'hi feedz', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak babuku'}, {quoted: res}))			      
-			      for (let x of ownerNumberr) {
 			      sendContact(from, x.split('@s.whatsapp.net')[0], 'M imam Adi', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu... jika kamu chat aneh² ke owner, owner tidak akan merespon'}, {quoted: res}))
-			    }			  
-			   } 
+			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu... jika kamu chat aneh² kek owner, owner tidak akan merespon'}, {quoted: res}))
+			    }
 			    break
 			case prefix+'dashboard':
 			var hit_global = []
@@ -1173,9 +1169,9 @@ ${tu}`
                 }
 				break
 			default:
-			if (!isGroup && isCmd) {
-				reply(`Maaf kak fitur ${command} tidak ada di menu`)
-			}
+                        if (budy.includes("Bot","bot")) {
+                        reply(`iya ada apa manggil bot? ketik <!allmenu/#menu> untuk melihat fitur bot`)
+                  }			
 		}
 	} catch (err) {
 		console.log(color('[ERROR]', 'red'), err)
