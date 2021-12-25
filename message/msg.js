@@ -267,7 +267,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 
 
         //welcome hafidz
-        client.on('group-participants-update', async (anu) => {
+        conn.on('group-participants-update', async (anu) => {
 		if (!welkom.includes(anu.jid)) return
 		try {
 			const mdata = await conn.groupMetadata(anu.jid)
@@ -295,7 +295,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 			} else if (anu.action == 'remove') {
 				num = anu.participants[0]
 				try {
-					ppimg = await client.getProfilePicture(`${num.split('@')[0]}@c.us`)
+					ppimg = await conn.getProfilePicture(`${num.split('@')[0]}@c.us`)
 				} catch {
 					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
 				}
