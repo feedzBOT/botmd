@@ -1169,9 +1169,9 @@ ${tu}`
                 }
 				break
 			default:
-			if (!isGroup && isCmd) {
-				reply(`Maaf kak fitur ${command} tidak ada di menu`)
-			}
+                        if (budy.includes("Bot","bot")) {
+                        reply(`iya ada apa manggil bot? ketik <!allmenu/#menu> untuk melihat fitur bot`)
+                  }			
 		}
 	} catch (err) {
 		console.log(color('[ERROR]', 'red'), err)
