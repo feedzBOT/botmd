@@ -1015,7 +1015,7 @@ ${tu}`
 				db.adddata('antiwame', {
 					id: from
 				})
-				reply(`Succes Mengaktifkan Anti Wa.me`)
+				reply(`Succes Mengaktifkan Anti wa.me`)
 			} else if (q == 'off') {
 				var deta = await db.showdata('antiwame', {
 					id: from
@@ -1110,18 +1110,14 @@ ${tu}`
 		if (!isGroupAdmins) return reply(mess.GrupAdmin)
 		if (!isBotGroupAdmins) return reply(mess.BotAdmin)
                 if (mentioned.length !== 0){
-                conn.groupRemove(from, mentioned)
+                conn.groupParticipantsUpdate(from, [sender], 'remove')
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))
                 } else if (isQuotedMsg) {
                 if (quotedMsg.sender === ownerNumber) return reply(`Tidak bisa kick Owner`)
-                conn.groupRemove(from, [quotedMsg.sender])
+                conn.groupParticipantsUpdate(from, [sender], 'remove')
                 .then((res) => reply(jsonformat(res)))
-                .catch((err) => reply(jsonformat(err)))
-                } else if (!isNaN(args[1])) {
-                conn.groupRemove(from, [args[1] + '@s.whatsapp.net'])
-                .then((res) => reply(jsonformat(res)))
-                .catch((err) => reply(jsonformat(err)))
+                .catch((err) => reply(jsonformat(err)))                  
                 } else {
                 reply(`tag atau nomor atau reply pesan orang yang ingin di kick`)
                 }
