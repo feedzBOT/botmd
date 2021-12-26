@@ -86,9 +86,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupMembers = isGroup ? groupMetadata.participants : ''
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-		const isGroupAdmins = groupAdmins.includes(sender)
-                const isWelcome = isGroup ? welcome.includes(from) : false
-                const isLeft = isGroup ? left.includes(from) : false
+		const isGroupAdmins = groupAdmins.includes(sender)             
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -852,44 +850,6 @@ ${tu}`
 				}).catch(() => reply(`Judul lagu tidak ditemukan`))
 				limitAdd(sender, limit)
 				break
-             //grup
-            case prefix+'welcome':
-            if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
-			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
-			if (!isGroup) return reply(mess.OnlyGrup)
-			if (args.length === 1) return reply(`Pilih enable atau disable kak?`)
-            if (args[1].toLowerCase() === 'enable'){
-            if (isWelcome) return reply(`Udah aktif`)
-            welcome.push(from)
-			fs.writeFileSync('./src/welcome.json', JSON.stringify(welcome))
-			reply('welcome enable')
-            } else if (args[1].toLowerCase() === 'disable'){
-            let anu = welcome.indexOf(from)
-            welcome.splice(anu, 1)
-            fs.writeFileSync('./src/welcome.json', JSON.stringify(welcome))
-            reply('welcome disable')
-            } else {
-            reply(`pilih enable atau disable kak?`)
-            }
-            break
-            if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
-			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
-			if (!isGroup) return reply(mess.OnlyGrup)
-            if (args.length === 1) return reply(`pilih enable atau disable kak?`)
-            if (args[1].toLowerCase() === 'enable'){
-            if (isLeft) return reply(`udah aktif`)
-            left.push(from)
-	    	fs.writeFileSync('./src/left.json', JSON.stringify(left))
-			reply('left enable')
-            } else if (args[1].toLowerCase() === 'disable'){
-            let anu = left.indexOf(from)
-            left.splice(anu, 1)
-            fs.writeFileSync('./src/left.json', JSON.stringify(left))
-            reply('left disable')
-            } else {
-            reply(`Pilih enable atau disable kak?`)
-            }
-            break          
 			case prefix+'grupwa': case prefix+'searchgrup':
 			if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
@@ -1220,8 +1180,8 @@ ${tu}`
                         if (messagesC.includes(`epi`)) {
                         reply(`bakar rumah kau biar rame!🔥`)
                         }
-                        if (messagesC.includes(`Bot`)) {
-                        reply(`ada apa kak manggil saya?`)
+                        if (messagesC.includes(`@12092086290`)) {
+                        reply(`ada apa kak manggil owner saya?`)
                         }
                         }
 	                } catch (err) {
