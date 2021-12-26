@@ -298,19 +298,8 @@ module.exports = async(conn, msg, m, setting, db) => {
             }
         }       
 	///gatau
-if (isGroup && !isOwner && !isGroupAdmins && isBotGroupAdmins) {
-            var welcome = await db.showdata('welcome', {
-                  id: from
-            })
-            try {
-                if (welcome[0].id === from) {
-                   ''
-                }
-            } catch {
-				return
-			}
-            conn.ev.on('group-participants.update', async (anu) => {
-                if (!welkom.includes(anu.jid)) return
+conn.on('group-participants.update', async (anu) => {
+		if (!welkom.includes(anu.jid)) return
 		try {
 			const mdata = await conn.groupMetadata(anu.jid)
 			console.log(anu)
@@ -348,8 +337,7 @@ if (isGroup && !isOwner && !isGroupAdmins && isBotGroupAdmins) {
 		} catch (e) {
 			console.log('Error : %s', color(e, 'red'))
 		}
-	})	
-}
+	})
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
