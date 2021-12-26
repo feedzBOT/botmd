@@ -349,6 +349,7 @@ if (isGroup && !isOwner && !isGroupAdmins && isBotGroupAdmins) {
 			console.log('Error : %s', color(e, 'red'))
 		}
 	})	
+}
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
