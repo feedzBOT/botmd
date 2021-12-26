@@ -429,10 +429,10 @@ conn.sendMessage(from, { image: { url: gopeynya }, caption: teksnya }, { quoted:
 			    for (let x of ownerNumber) {
 			      sendContact(from, x.split('@s.whatsapp.net')[0], 'hi feedz', msg)
 			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))
-                            for (let x of ownerNumberr) {
+                             }
+                              for (let x of ownerNumberr) {
                               sendContact(from, x.split('@s.whatsapp.net')[0], 'M Imam Adi', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))
-			    }
+			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))			    
                             }
 			    break
 			case prefix+'dashboard':
