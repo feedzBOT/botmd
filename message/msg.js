@@ -692,8 +692,56 @@ ${tu}`
             case prefix+'play':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} lily`)
-                reply(mess.wait)
-                await sendPlay(from, q)
+               
+                try {
+                    reply(mess.wait)
+                    let yut = await yts(q)
+                    yta(yut.videos[0].url)
+                    .then((res) => {
+                        const { dl_link, thumb, title, filesizeF, filesize } = res
+                        axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
+                        .then((a) => {
+                            if (Number(filesize) >= 30000) return sendFileFromUrl(from, thumb, `┏┉⌣ ┈̥-̶̯͡..̷̴✽̶┄┈┈┈┈┈┈┈┈┈┈┉┓
+┆ *YOUTUBE PLAYMP3*
+└┈┈┈┈┈┈┈┈┈┈┈⌣ ┈̥-̶̯͡..̷̴✽̶⌣ ✽̶
+
+*Data Berhasil Didapatkan!*
+\`\`\`▢ Title : ${title}\`\`\`
+\`\`\`▢ Ext : MP3\`\`\`
+\`\`\`▢ Filesize : ${filesizeF}\`\`\`
+\`\`\`▢ ID : ${yut.videos[0].videoId}\`\`\`
+\`\`\`▢ Upload : ${yut.videos[0].ago}\`\`\`
+\`\`\`▢ Ditonton : ${yut.videos[0].views}\`\`\`
+\`\`\`▢ Duration : ${yut.videos[0].timestamp}\`\`\`
+\`\`\`▢ Link : ${a.data}\`\`\`
+_Untuk durasi lebih dari batas disajikan dalam bentuk link_`, msg)
+                        const captionis = `┏┉⌣ ┈̥-̶̯͡..̷̴✽̶┄┈┈┈┈┈┈┈┈┈┈┉┓
+┆ *YOUTUBE PLAYMP3*
+└┈┈┈┈┈┈┈┈┈┈┈⌣ ┈̥-̶̯͡..̷̴✽̶⌣ ✽̶
+
+*Data Berhasil Didapatkan!*
+\`\`\`▢ Title : ${title}\`\`\`
+\`\`\`▢ Ext : MP3\`\`\`
+\`\`\`▢ Size : ${filesizeF}\`\`\`
+\`\`\`▢ ID : ${yut.videos[0].videoId}\`\`\`
+\`\`\`▢ Upload : ${yut.videos[0].ago}\`\`\`
+\`\`\`▢ Ditonton : ${yut.videos[0].views}\`\`\`
+\`\`\`▢ Duration : ${yut.videos[0].timestamp}\`\`\`
+\`\`\`▢ URL : ${yut.videos[0].url}\`\`\`
+
+_Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
+                            sendFileFromUrl(from, thumb, captionis, msg)
+                            sendFileFromUrl(from, dl_link, '', msg)
+                            limitAdd(sender, limit)
+                        })
+                    })
+                    .catch((err) => reply(`${err}`))
+                } catch (err) {
+                    sendMess(ownerNumber, 'PlayMp3 Error : ' + err)
+                    console.log(color('[PlayMp3]', 'red'), err)
+                    reply(mess.error.api)
+                }
+            }
 				limitAdd(sender, limit)
                 break
 			case prefix+'ytmp4': case prefix+'mp4':
