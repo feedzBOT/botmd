@@ -1105,6 +1105,27 @@ ${tu}`
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
 			    break
+                case prefix+'kick':
+                if (!isGroup) return reply(mess.OnlyGrup)
+		if (!isGroupAdmins) return reply(mess.GrupAdmin)
+		if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+                if (mentioned.length !== 0){
+                conn.groupRemove(from, mentioned)
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))
+                } else if (isQuotedMsg) {
+                if (quotedMsg.sender === ownerNumber) return reply(`Tidak bisa kick Owner`)
+                conn.groupRemove(from, [quotedMsg.sender])
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))
+                } else if (!isNaN(args[1])) {
+                conn.groupRemove(from, [args[1] + '@s.whatsapp.net'])
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))
+                } else {
+                reply(`tag atau nomor atau reply pesan orang yang ingin di kick`)
+                }
+                break
 			// Bank & Payment Menu
 			case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
