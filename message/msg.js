@@ -300,30 +300,18 @@ module.exports = async(conn, msg, m, setting, db) => {
 	conn.ev.on('group-participants.update', async (anu) => {
         console.log(anu)
         try {
-            let metadata = await conn.groupMetadata(anu.id)
+            let metadata = await conn.groupMetadata(anu.jid)
             let participants = anu.participants
-            for (let num of participants) {
-                // Mengambil foto Profile Member
+            for (let num of participants) {               
                 try {
                    var ppuser = await conn.profilePictureUrl(num, 'image')
                 } catch {
                    var ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }               
-                // Welcome & remove Created by adi
+                }                          
                 if (anu.action == 'add') {
-                var adigans = await db.showdata('welcome', {
-                    id: anu.jid
-                })
-                try {
-                if (adigans[0].id === anu.jid) {
-                          ''
-                }
-                } catch {
-                   return
-                }
-                    conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Selamat Datang *@${num.split("@")[0]}*\nDi Group ${metadata.subject}\n\nSilahkan isi data di bawah ini untuk memperkenalkan diri 👑🤯🗿\n\n📌*Nama*:\n📌*Umur*:\n📌*Kelas*:\n📌*Askot*:\n📌*Gender*:\n\n*Selamat Bergabung semoga betah*` })
+                conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Selamat Datang *@${num.split("@")[0]}*\nDi Group ${metadata.subject}\n\nSilahkan isi data di bawah ini untuk memperkenalkan diri 👑🤯🗿\n\n📌*Nama*:\n📌*Umur*:\n📌*Kelas*:\n📌*Askot*:\n📌*Gender*:\n\n*Selamat Bergabung semoga betah*` })
                 } else if (anu.action == 'remove') {
-                    conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Beban group keluar *@${num.split("@")[0]}* Dari group ${metadata.subject}` })
+                conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Beban group keluar *@${num.split("@")[0]}* Dari group ${metadata.subject}` })
 		}
             }
         } catch (err) {
