@@ -1186,8 +1186,7 @@ ${tu}`
                 if (!isGroup) return reply(mess.OnlyGrup)
                 if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
                 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-	      	if (isQuotedMsg && args.length < 2) {
-                conn.groupParticipantsUpdate(from, mentioned, 'add')
+	      		if (isQuotedMsg && args.length < 2) {
                 then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))
                 } else if (isQuotedMsg) {                
