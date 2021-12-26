@@ -2,7 +2,7 @@
 const {
 	MessageType,
 	Presence
-} = require("@adiwajshing/baileys");
+} = require("@@adiwajshing/baileys-md");
 const fs = require("fs");
 
 const { getBuffer, sleep } = require("../lib/myfunc");
