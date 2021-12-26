@@ -87,8 +87,8 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 		const isGroupAdmins = groupAdmins.includes(sender)
-        const isWelcome = isGroup ? welcome.includes(from) : false
-        const isLeft = isGroup ? left.includes(from) : false
+                const isWelcome = isGroup ? welcome.includes(from) : false
+                const isLeft = isGroup ? left.includes(from) : false
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -392,15 +392,15 @@ module.exports = async(conn, msg, m, setting, db) => {
 
 		switch(command) {
 			// Main Menu
-			case prefix+'menu':
+                        case prefix+'menu':
 			case prefix+'help':
-			    var tothit = await db.showdata('hit')
-                            var hit = tothit.length
-                            var reg = await db.showdata('user')
-                            var ckreg = reg.length
-			    var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg)
-			    conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
-				break
+		        var tothit = await db.showdata('hit')
+                        var hit = tothit.length
+                        var reg = await db.showdata('user')
+                        var ckreg = reg.length
+			var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg)
+			conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
+                        break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
 			    break
