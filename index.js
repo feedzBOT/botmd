@@ -94,47 +94,6 @@ const connectToWhatsApp = async () => {
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
 		require('./message/msg')(conn, msg, m, setting, db)
 	})
-///gatau
-conn.ev.on('group-participants.update', async (anu) => {
-		if (!welkom.includes(anu.jid)) return
-		try {
-			const mdata = await conn.groupMetadata(anu.jid)
-			console.log(anu)
-			if (anu.action == 'add') {
-				num = anu.participants[0]
-				try {
-					ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
-				} catch {
-					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
-				}
-				teks = `Hai @${num.split('@')[0]} \Selamat datang di group *${mdata.subject}* 
-╭━━━━━━━━━━━━━
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *NAME:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *UMUR:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *ASKOT:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *GENDER:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *INSTAGRAM:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *FAVORIT:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *HOBBY:*
-╰━━━━━━━━━━━━━
-  *[NOTE]*\n\nBaca Deskripsi Grup Kawand!`
-				let buffer = await getBuffer(ppimg)
-				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
-			} else if (anu.action == 'remove') {
-				num = anu.participants[0]
-				try {
-					ppimg = await conn.getProfilePicture(`${num.split('@')[0]}@c.us`)
-				} catch {
-					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
-				}
-				teks = `*「 🚮 」Bacakan Ya-siin Buat Saudara Kita Yang Keluar Dari Group, Semoga Amal Dan Ibadahnya Di Terima Di Sisi Tuhan...*@${num.split('@')[0]}`
-				let buffer = await getBuffer(ppimg)
-				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
-			}
-		} catch (e) {
-			console.log('Error : %s', color(e, 'red'))
-		}
-	})
 	conn.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect } = update
         if (connection === 'close') {
