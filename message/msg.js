@@ -1148,23 +1148,36 @@ ${tu}`
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
 			    break
 			    case prefix+'welcome':
-			    if (!isGroup) return reply(mess.OnlyGrup)
-		        if (!isGroupAdmins) return reply(mess.GrupAdmin)
-		        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-		        if (args.length < 1) return reply('ngapain?')
-				if (Number(args[0]) === 1) {
-				if (isWelkom) return reply('udah aktif kak')
-				welkom.push(from)
-				fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-				reply('successfully activated the welcome to this group feature!')
-				} else if (Number(args[0]) === 0) {
-				welkom.splice(from, 1)
-				fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-				reply('successfully disabled the welcome to this group feature!')
-				} else {
-				reply('1 for activated, 0 untuk disabled')
+			if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
+			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
+			if (!isGroup) return reply(mess.OnlyGrup)
+			if (q == 'on') {
+				var deta = await db.showdata('welcome', {
+					id: from
+				})
+				try {
+					if (deta[0].id === from) return reply('Sudah Aktif')
+				} catch {}
+				db.adddata('welcome', {
+					id: from
+				})
+				reply(`Succes Mengaktifkan Fitur Welcome`)
+			} else if (q == 'off') {
+				var deta = await db.showdata('welcome', {
+					id: from
+				})
+				try {
+					if (deta[0].id === from) {
+						db.delete('welcome', {
+							id: from
+						})
+						reply('Sukses nonaktifkan fitur welcome')
+					}
+				} catch {
+					reply('Welcome tidak diaktifkan!')
 				}
-				break
+			}
+			break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
