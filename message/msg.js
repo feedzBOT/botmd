@@ -1151,33 +1151,20 @@ ${tu}`
 			if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
 			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
 			if (!isGroup) return reply(mess.OnlyGrup)
-			if (q == 'on') {
-				var deta = await db.showdata('welcome', {
-					id: from
-				})
-				try {
-					if (deta[0].id === from) return reply('Sudah Aktif')
-				} catch {}
-				db.adddata('welcome', {
-					id: from
-				})
-				reply(`Succes Mengaktifkan Fitur Welcome`)
-			} else if (q == 'off') {
-				var deta = await db.showdata('welcome', {
-					id: from
-				})
-				try {
-					if (deta[0].id === from) {
-						db.delete('welcome', {
-							id: from
-						})
-						reply('Sukses nonaktifkan fitur welcome')
+			if (args.length < 1) return reply('ngapain?')
+					if (Number(args[0]) === 1) {
+					if (isWelkom) return reply('sudah aktif kak!')
+					welkom.push(from, 0)
+					fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+					reply('successfully activated the welcome feature to this group')
+					} else if (Number(args[0]) === 0) {
+					welkom.splice(from, 1)
+					fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+					reply('successfully disable the welcome feature to this group')
+					} else {
+					reply('1 for activated, 0 untuk disabled')
 					}
-				} catch {
-					reply('Welcome tidak diaktifkan!')
-				}
-			}
-			break
+					break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
