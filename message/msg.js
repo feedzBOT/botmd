@@ -426,13 +426,9 @@ conn.sendMessage(from, { image: { url: gopeynya }, caption: teksnya }, { quoted:
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
 			      sendContact(from, x.split('@s.whatsapp.net')[0], 'hi feedz', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))
-                             }
-                              for (let x of ownerNumberr) {
-                              sendContact(from, x.split('@s.whatsapp.net')[0], 'M Imam Adi', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))			    
-                            }
-			    break
+		      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))
+                        }
+                        break
 			case prefix+'dashboard':
 			var hit_global = []
 			var hit_user = []
