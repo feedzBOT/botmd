@@ -646,12 +646,12 @@ ${tu}`
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-            case prefix+'play':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                case prefix+'play':
+	        if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} lily`)
                 reply(mess.wait)
                 await sendPlay(from, q)
-				limitAdd(sender, limit)
+		limitAdd(sender, limit)
                 break
 			case prefix+'ytmp4': case prefix+'mp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
