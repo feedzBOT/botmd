@@ -12,6 +12,7 @@ const { addPlayGame, getJawabanGame, isPlayGame, cekWaktuGame, getGamePosi } = r
 const tictac = require("../lib/tictac");
 const _prem = require("../lib/premium");
 const { tiktok } = require("../lib/tiktok");
+const { y2mateA, y2mateV } = require('./lib/y2mate');
 const fs = require ("fs");
 const moment = require("moment-timezone");
 const util = require("util");
