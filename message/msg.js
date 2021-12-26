@@ -299,45 +299,51 @@ module.exports = async(conn, msg, m, setting, db) => {
         }       
 	///gatau
 conn.ev.on('group-participants.update', async (anu) => {
-		if (!welkom.includes(anu.jid)) return
-		try {
-			const mdata = await conn.groupMetadata(anu.jid)
-			console.log(anu)
-			if (anu.action == 'add') {
-				num = anu.participants[0]
-				try {
-					ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
-				} catch {
-					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
-				}
-				teks = `Hai @${num.split('@')[0]} \Selamat datang di group *${mdata.subject}* 
-╭━━━━━━━━━━━━━
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *NAME:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *UMUR:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *ASKOT:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *GENDER:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *INSTAGRAM:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *FAVORIT:*
-│【♡ۣۜۜ፝͜͜͡͡✿➣ *HOBBY:*
-╰━━━━━━━━━━━━━
-  *[NOTE]*\n\nBaca Deskripsi Grup Kawand!`
-				let buffer = await getBuffer(ppimg)
-				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
-			} else if (anu.action == 'remove') {
-				num = anu.participants[0]
-				try {
-					ppimg = await conn.getProfilePicture(`${num.split('@')[0]}@c.us`)
-				} catch {
-					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
-				}
-				teks = `*「 🚮 」Bacakan Ya-siin Buat Saudara Kita Yang Keluar Dari Group, Semoga Amal Dan Ibadahnya Di Terima Di Sisi Tuhan...*@${num.split('@')[0]}`
-				let buffer = await getBuffer(ppimg)
-				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
-			}
-		} catch (e) {
-			console.log('Error : %s', color(e, 'red'))
+        console.log(anu)
+        try {
+            let metadata = await conn.groupMetadata(anu.id)
+            let participants = anu.participants
+            for (let num of participants) {
+                // Mengambil foto Profile Member
+                try {
+                   var ppuser = await conn.profilePictureUrl(num, 'image')
+                } catch {
+                   var ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+
+                // Mengambil foto Profile Group
+                try {
+                   var ppgroup = await conn.profilePictureUrl(anu.id, 'image')
+                } catch {
+                   var ppgroup = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+
+                // Welcome & remove Created by adi
+                if (anu.action == 'add') {
+                var adigans = await db.showdata('welcome', {
+                    id: anu.jid
+                })
+                try {
+                if (adigans[0].id === anu.jid) {
+                          ''
+                }
+                } catch {
+                   return
+                }
+                    conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Selamat Datang *@${num.split("@")[0]}*\nDi Group ${metadata.subject}\n\nSilahkan isi data di bawah ini untuk memperkenalkan diri 👑🤯🗿\n\n📌*Nama*:\n📌*Umur*:\n📌*Kelas*:\n📌*Askot*:\n📌*Gender*:\n\n*Selamat Bergabung semoga betah*` })
+                } else if (anu.action == 'remove') {
+                    conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Beban group keluar *@${num.split("@")[0]}* Dari group ${metadata.subject}` })
+                // Promote & Demote Created by adi
+                } else if (anu.action == 'promote') {
+                    conn.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `Selamat *@${num.split("@")[0]}* Kamu menjadi admin di group *${metadata.subject}*` })
+		} else if (anu.action == 'demote') {
+		    conn.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `Yahhaha kasian di jadiin member *@${num.split("@")[0]}* Di group *${metadata.subject}*` })
 		}
-	})
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    })
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
@@ -1151,20 +1157,33 @@ ${tu}`
 			if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
 			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
 			if (!isGroup) return reply(mess.OnlyGrup)
-			if (args.length < 1) return reply('ngapain?')
-					if (Number(args[0]) === 1) {
-					if (isWelkom) return reply('sudah aktif kak!')
-					welkom.push(from, 0)
-					fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-					reply('successfully activated the welcome feature to this group')
-					} else if (Number(args[0]) === 0) {
-					welkom.splice(from, 1)
-					fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-					reply('successfully disable the welcome feature to this group')
-					} else {
-					reply('1 for activated, 0 untuk disabled')
+			if (q == 'on') {
+				var deta = await db.showdata('welcome', {
+					id: from
+				})
+				try {
+					if (deta[0].id === from) return reply('Sudah Aktif')
+				} catch {}
+				db.adddata('welcome', {
+					id: from
+				})
+				reply(`Succes Mengaktifkan Fitur Welcome`)
+			} else if (q == 'off') {
+				var deta = await db.showdata('welcome', {
+					id: from
+				})
+				try {
+					if (deta[0].id === from) {
+						db.delete('welcome', {
+							id: from
+						})
+						reply('Sukses nonaktifkan fitur welcome')
 					}
-					break
+				} catch {
+					reply('Welcome tidak diaktifkan!')
+				}
+			}
+			break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
