@@ -689,61 +689,59 @@ ${tu}`
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-            case prefix+'play':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-                if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} lily`)
-               
-                try {
-                    reply(mess.wait)
-                    let yut = await yts(q)
-                    yta(yut.videos[0].url)
-                    .then((res) => {
-                        const { dl_link, thumb, title, filesizeF, filesize } = res
-                        axios.get(`https://tinyurl.com/api-create.php?url=${dl_link}`)
-                        .then((a) => {
-                            if (Number(filesize) >= 30000) return sendFileFromUrl(from, thumb, `┏┉⌣ ┈̥-̶̯͡..̷̴✽̶┄┈┈┈┈┈┈┈┈┈┈┉┓
-┆ *YOUTUBE PLAYMP3*
-└┈┈┈┈┈┈┈┈┈┈┈⌣ ┈̥-̶̯͡..̷̴✽̶⌣ ✽̶
+                case 'ytplay':            
+           if (!text) throw ('Judul??')
+            let teks1 = args.join(' ')
+            reply(mess.wait)
+            let yut = await yts(teks1)
+            res = await y2mateV(`${yut.videos[0].url}`).catch(e => {
+            m.reply('_[ ! ] Error Gagal Dalam Memasuki Web Y2mate_')
+})
+            result = `
+*_STATUS :_* *YOUTUBE PLAY*
 
-*Data Berhasil Didapatkan!*
-\`\`\`▢ Title : ${title}\`\`\`
-\`\`\`▢ Ext : MP3\`\`\`
-\`\`\`▢ Filesize : ${filesizeF}\`\`\`
-\`\`\`▢ ID : ${yut.videos[0].videoId}\`\`\`
-\`\`\`▢ Upload : ${yut.videos[0].ago}\`\`\`
-\`\`\`▢ Ditonton : ${yut.videos[0].views}\`\`\`
-\`\`\`▢ Duration : ${yut.videos[0].timestamp}\`\`\`
-\`\`\`▢ Link : ${a.data}\`\`\`
-_Untuk durasi lebih dari batas disajikan dalam bentuk link_`, msg)
-                        const captionis = `┏┉⌣ ┈̥-̶̯͡..̷̴✽̶┄┈┈┈┈┈┈┈┈┈┈┉┓
-┆ *YOUTUBE PLAYMP3*
-└┈┈┈┈┈┈┈┈┈┈┈⌣ ┈̥-̶̯͡..̷̴✽̶⌣ ✽̶
+*_Data Status!_*
+*•Title : ${res[0].judul}*
+*•Ext : YOUTUBE PLAY*
 
-*Data Berhasil Didapatkan!*
-\`\`\`▢ Title : ${title}\`\`\`
-\`\`\`▢ Ext : MP3\`\`\`
-\`\`\`▢ Size : ${filesizeF}\`\`\`
-\`\`\`▢ ID : ${yut.videos[0].videoId}\`\`\`
-\`\`\`▢ Upload : ${yut.videos[0].ago}\`\`\`
-\`\`\`▢ Ditonton : ${yut.videos[0].views}\`\`\`
-\`\`\`▢ Duration : ${yut.videos[0].timestamp}\`\`\`
-\`\`\`▢ URL : ${yut.videos[0].url}\`\`\`
-
-_Silahkan tunggu file media sedang dikirim mungkin butuh beberapa menit_`
-                            sendFileFromUrl(from, thumb, captionis, msg)
-                            sendFileFromUrl(from, dl_link, '', msg)
-                            limitAdd(sender, limit)
-                        })
-                    })
-                    .catch((err) => reply(`${err}`))
-                } catch (err) {
-                    sendMess(ownerNumber, 'PlayMp3 Error : ' + err)
-                    console.log(color('[PlayMp3]', 'red'), err)
-                    reply(mess.error.api)
-                }
-            }
-				limitAdd(sender, limit)
-                break
+*_Presss Select Enter Button_*`
+ya = await getBuffer(res[0].thumb) 
+                const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
+                    templateMessage: {
+                        hydratedTemplate: {
+                            locationMessage: { 
+                           degreesLatitude: 0,
+						   degreesLongitude: 0, 
+						   jpegThumbnail: ya,
+						   },
+                            hydratedContentText: `${result}`,
+                            hydratedFooterText: `Beta Version : 1.1.0`,
+                            hydratedButtons: [{
+                                urlButton: {
+                                    displayText: 'View On YouTube',
+                                    url: `${yut.videos[0].url}`
+                                }
+                            }, {
+                                callButton: {
+                                    displayText: 'Number Phone Owner',
+                                    phoneNumber: '+62 882-9202-4190'
+                                }
+                            }, {
+                                quickReplyButton: {
+                                    displayText: '⪼VIDEO',
+                                    id: `ytmp4 ${yut.videos[0].url}`
+                                }                            
+                            }, {
+                                quickReplyButton: {
+                                    displayText: '⪼AUDIO',
+                                    id: `ytmp3 ${yut.videos[0].url}`
+                                }
+                            }]
+                        }
+                    }
+                }), { userJid: m.chat, quoted: m })
+                conn.relayMessage(m.chat, template.message, { messageId: template.key.id })                      
+            break
 			case prefix+'ytmp4': case prefix+'mp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
