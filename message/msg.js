@@ -690,59 +690,13 @@ ${tu}`
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-                case 'ytplay':            
-           if (!text) throw ('Judul??')
-            let teks1 = args.join(' ')
-            reply(mess.wait)
-            let yut = await yts(teks1)
-            res = await y2mateV(`${yut.videos[0].url}`).catch(e => {
-            m.reply('_[ ! ] Error Gagal Dalam Memasuki Web Y2mate_')
-})
-            result = `
-*_STATUS :_* *YOUTUBE PLAY*
-
-*_Data Status!_*
-*•Title : ${res[0].judul}*
-*•Ext : YOUTUBE PLAY*
-
-*_Presss Select Enter Button_*`
-ya = await getBuffer(res[0].thumb) 
-                const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
-                    templateMessage: {
-                        hydratedTemplate: {
-                            locationMessage: { 
-                           degreesLatitude: 0,
-						   degreesLongitude: 0, 
-						   jpegThumbnail: ya,
-						   },
-                            hydratedContentText: `${result}`,
-                            hydratedFooterText: `Beta Version : 1.1.0`,
-                            hydratedButtons: [{
-                                urlButton: {
-                                    displayText: 'View On YouTube',
-                                    url: `${yut.videos[0].url}`
-                                }
-                            }, {
-                                callButton: {
-                                    displayText: 'Number Phone Owner',
-                                    phoneNumber: '+62 882-9202-4190'
-                                }
-                            }, {
-                                quickReplyButton: {
-                                    displayText: '⪼VIDEO',
-                                    id: `ytmp4 ${yut.videos[0].url}`
-                                }                            
-                            }, {
-                                quickReplyButton: {
-                                    displayText: '⪼AUDIO',
-                                    id: `ytmp3 ${yut.videos[0].url}`
-                                }
-                            }]
-                        }
-                    }
-                }), { userJid: m.chat, quoted: m })
-                conn.relayMessage(m.chat, template.message, { messageId: template.key.id })                      
-            break
+                case prefix+'play':
+	        if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} lily`)
+                reply(mess.wait)
+                await sendPlay(from, q)
+		limitAdd(sender, limit)
+                break
 			case prefix+'ytmp4': case prefix+'mp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (args.length < 2) return reply(`Kirim perintah ${command} link`)
@@ -1233,11 +1187,10 @@ ya = await getBuffer(res[0].thumb)
                 if (!isGroup) return reply(mess.OnlyGrup)
                 if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
                 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-	  	if (isQuotedMsg && args.length < 2) {
+	  	if (mentioned.length !== 0){                              
+                conn.groupParticipantsUpdate(from, mentioned, 'add') 
                 then((res) => reply(jsonformat(res)))
-                .catch((err) => reply(jsonformat(err)))
-                } else if (isQuotedMsg) {                
-                conn.groupParticipantsUpdate(from, mentioned, 'add')                             
+                .catch((err) => reply(jsonformat(err)))                            
                 } else {
                 reply(`tag atau nomor atau reply pesan orang yang ingin di tambahkan!`)
                 }
