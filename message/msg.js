@@ -297,8 +297,7 @@ module.exports = async(conn, msg, m, setting, db) => {
                 conn.groupParticipantsUpdate(from, [sender], 'remove')
             }
         }       
-	///gatau
-conn.ev.on('group-participants.update', async (anu) => {
+	conn.ev.on('group-participants.update', async (anu) => {
         console.log(anu)
         try {
             let metadata = await conn.groupMetadata(anu.id)
@@ -309,15 +308,7 @@ conn.ev.on('group-participants.update', async (anu) => {
                    var ppuser = await conn.profilePictureUrl(num, 'image')
                 } catch {
                    var ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }
-
-                // Mengambil foto Profile Group
-                try {
-                   var ppgroup = await conn.profilePictureUrl(anu.id, 'image')
-                } catch {
-                   var ppgroup = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }
-
+                }               
                 // Welcome & remove Created by adi
                 if (anu.action == 'add') {
                 var adigans = await db.showdata('welcome', {
@@ -333,11 +324,6 @@ conn.ev.on('group-participants.update', async (anu) => {
                     conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Selamat Datang *@${num.split("@")[0]}*\nDi Group ${metadata.subject}\n\nSilahkan isi data di bawah ini untuk memperkenalkan diri 👑🤯🗿\n\n📌*Nama*:\n📌*Umur*:\n📌*Kelas*:\n📌*Askot*:\n📌*Gender*:\n\n*Selamat Bergabung semoga betah*` })
                 } else if (anu.action == 'remove') {
                     conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Beban group keluar *@${num.split("@")[0]}* Dari group ${metadata.subject}` })
-                // Promote & Demote Created by adi
-                } else if (anu.action == 'promote') {
-                    conn.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `Selamat *@${num.split("@")[0]}* Kamu menjadi admin di group *${metadata.subject}*` })
-		} else if (anu.action == 'demote') {
-		    conn.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `Yahhaha kasian di jadiin member *@${num.split("@")[0]}* Di group *${metadata.subject}*` })
 		}
             }
         } catch (err) {
@@ -1157,18 +1143,18 @@ ${tu}`
 			if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
 			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
 			if (!isGroup) return reply(mess.OnlyGrup)
-			if (q == 'on') {
+			if (q == '1') {
 				var deta = await db.showdata('welcome', {
 					id: from
 				})
 				try {
-					if (deta[0].id === from) return reply('Sudah Aktif')
+					if (deta[0].id === from) return reply('feature welcome is activated!!')
 				} catch {}
 				db.adddata('welcome', {
 					id: from
 				})
-				reply(`Succes Mengaktifkan Fitur Welcome`)
-			} else if (q == 'off') {
+				reply(`successfully activated feature welcome in group!`)
+			} else if (q == '0') {
 				var deta = await db.showdata('welcome', {
 					id: from
 				})
@@ -1177,13 +1163,14 @@ ${tu}`
 						db.delete('welcome', {
 							id: from
 						})
-						reply('Sukses nonaktifkan fitur welcome')
+						reply('successfully disabled feature welcome in group!')
 					}
 				} catch {
-					reply('Welcome tidak diaktifkan!')
+					reply('feature welcome is not activated!')
 				}
 			}
 			break
+
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
