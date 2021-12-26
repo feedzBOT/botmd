@@ -29,6 +29,7 @@ const ms = require("parse-ms");
 
 // Correct
 const words = JSON.parse(fs.readFileSync('./src/correct.json'))
+const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 
 // Exif
 const Exif = require("../lib/exif")
@@ -70,6 +71,46 @@ module.exports = async(conn, msg, m, setting, db) => {
 				prefix = conn.prefa
 			}
 		}
+		sock.ev.on('group-participants.update', async (anu) => {
+		if (!welkom.includes(anu.jid)) return
+		try {
+			const mdata = await conn.groupMetadata(anu.jid)
+			console.log(anu)
+			if (anu.action == 'add') {
+				num = anu.participants[0]
+				try {
+					ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+				} catch {
+					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
+				}
+				teks = `Hai @${num.split('@')[0]} \Selamat datang di group *${mdata.subject}* 
+╭━━━━━━━━━━━━━
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *NAME:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *UMUR:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *ASKOT:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *GENDER:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *INSTAGRAM:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *FAVORIT:*
+│【♡ۣۜۜ፝͜͜͡͡✿➣ *HOBBY:*
+╰━━━━━━━━━━━━━
+  *[NOTE]*\n\nBaca Deskripsi Grup Kawand!`
+				let buffer = await getBuffer(ppimg)
+				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+			} else if (anu.action == 'remove') {
+				num = anu.participants[0]
+				try {
+					ppimg = await conn.getProfilePicture(`${num.split('@')[0]}@c.us`)
+				} catch {
+					ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
+				}
+				teks = `*「 🚮 」Bacakan Ya-siin Buat Saudara Kita Yang Keluar Dari Group, Semoga Amal Dan Ibadahnya Di Terima Di Sisi Tuhan...*@${num.split('@')[0]}`
+				let buffer = await getBuffer(ppimg)
+				conn.sendMessage(mdata.id, buffer, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+			}
+		} catch (e) {
+			console.log('Error : %s', color(e, 'red'))
+		}
+	})
 		const args = chats.split(' ')
 		const command = chats.toLowerCase().split(' ')[0] || ''
 		const isCmd = command.startsWith(prefix)
@@ -86,7 +127,8 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupMembers = isGroup ? groupMetadata.participants : ''
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-		const isGroupAdmins = groupAdmins.includes(sender)             
+		const isGroupAdmins = groupAdmins.includes(sender)     
+		const isWelkom = isGroup ? welkom.includes(from) : false
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -1089,32 +1131,50 @@ ${tu}`
 				  reply(`Kirim perintah ${command} _options_\nOptions : close & open\nContoh : ${command} close`)
 				}
 			    break
-			case prefix+'revoke':
+			    case prefix+'revoke':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 				await conn.groupRevokeInvite(from)
 			    .then( res => {
-				  reply(`Sukses menyetel tautan undangan grup ini`)
+			    reply(`Sukses menyetel tautan undangan grup ini`)
 				}).catch(() => reply(mess.error.api))
 				break
-			case prefix+'hidetag':
+			    case prefix+'hidetag':
 		        if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
 			    let mem = [];
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
 			    break
+			    case prefix+'welcome':
+			    if (!isGroup) return reply(mess.OnlyGrup)
+		        if (!isGroupAdmins) return reply(mess.GrupAdmin)
+		        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+		        if (args.length < 1) return reply('ngapain?')
+				if (Number(args[0]) === 1) {
+				if (isWelkom) return reply('udah aktif kak')
+				welkom.push(from)
+				fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+				reply('successfully activated the welcome to this group feature!')
+				} else if (Number(args[0]) === 0) {
+				welkom.splice(from, 1)
+				fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
+				reply('successfully disabled the welcome to this group feature!')
+				} else {
+				reply('1 for activated, 0 untuk disabled')
+				}
+				break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
-		if (!isGroupAdmins) return reply(mess.GrupAdmin)
-		if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+		        if (!isGroupAdmins) return reply(mess.GrupAdmin)
+		        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
                 if (mentioned.length !== 0){
                 conn.groupParticipantsUpdate(from, mentioned, 'remove')
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))
                 } else if (isQuotedMsg) {
-                if (quotedMsg.sender === ownerNumber) return reply(`Tidak bisa kick Owner`)
+                if (quotedMsg.sender === ownerNumber) return reply(`tidak bisa kick owner`)
                 conn.groupParticipantsUpdate(from, mentioned, 'remove')
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))                  
@@ -1192,10 +1252,7 @@ ${tu}`
                         }
                         if (messagesC.includes(`epi`)) {
                         reply(`bakar rumah kau biar rame!🔥`)
-                        }
-                        if (messagesC.includes(`@12092086290`)) {
-                        reply(`ada apa kak manggil owner saya?`)
-                        }
+                        }                       
                         }
 	                } catch (err) {
 		        console.log(color('[ERROR]', 'red'), err)
