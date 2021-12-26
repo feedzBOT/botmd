@@ -1110,12 +1110,12 @@ ${tu}`
 		if (!isGroupAdmins) return reply(mess.GrupAdmin)
 		if (!isBotGroupAdmins) return reply(mess.BotAdmin)
                 if (mentioned.length !== 0){
-                conn.groupParticipantsUpdate(from, [sender], 'remove')
+                conn.groupParticipantsUpdate(from, [mentioned], 'remove')
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))
                 } else if (isQuotedMsg) {
                 if (quotedMsg.sender === ownerNumber) return reply(`Tidak bisa kick Owner`)
-                conn.groupParticipantsUpdate(from, [sender], 'remove')
+                conn.groupParticipantsUpdate(from, [mentioned], 'remove')
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))                  
                 } else {
