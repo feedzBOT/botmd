@@ -1214,11 +1214,17 @@ ${tu}`
                 }
 				break
 			default:
+                        if (messagesC.includes(`salam`)) {
+                        reply(`wa'alaikumsalam wr.wb.`)
+                        }
                         if (messagesC.includes(`epi`)) {
                         reply(`bakar rumah kau biar rame!🔥`)
-}
-		}
-	} catch (err) {
-		console.log(color('[ERROR]', 'red'), err)
+                        }
+                        if (messagesC.includes(`Bot`)) {
+                        reply(`ada apa kak manggil saya?`)
+                        }
+                        }
+	                } catch (err) {
+		        console.log(color('[ERROR]', 'red'), err)
 	}
 }
