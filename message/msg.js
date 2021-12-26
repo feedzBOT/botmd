@@ -1167,8 +1167,8 @@ ${tu}`
 				break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
-		        if (!isGroupAdmins) return reply(mess.GrupAdmin)
-		        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
+	        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
                 if (mentioned.length !== 0){
                 conn.groupParticipantsUpdate(from, mentioned, 'remove')
                 .then((res) => reply(jsonformat(res)))
@@ -1179,11 +1179,27 @@ ${tu}`
                 .then((res) => reply(jsonformat(res)))
                 .catch((err) => reply(jsonformat(err)))                  
                 } else {
-                reply(`tag atau nomor atau reply pesan orang yang ingin di kick`)
+                reply(`tag atau nomor atau reply pesan orang yang ingin di kick!`)
                 }
                 break
-			// Bank & Payment Menu
-			case prefix+'topbalance':{
+                case prefix+'add':
+                if (!isGroup) return reply(mess.OnlyGrup)
+                if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
+                if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+	      	if (isQuotedMsg && args.length < 2) {
+                conn.groupParticipantsUpdate(from, mentioned, 'add')
+                then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))
+                } else if (isQuotedMsg) {                
+                conn.groupParticipantsUpdate(from, mentioned, 'add')
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))                  
+                } else {
+                reply(`tag atau nomor atau reply pesan orang yang ingin di tambahkan!`)
+                }
+                break
+                // Bank & Payment Menu
+		case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
                 let top = '*── 「 TOP BALANCE 」 ──*\n\n'
                 let arrTop = []
