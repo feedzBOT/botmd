@@ -71,7 +71,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 				prefix = conn.prefa
 			}
 		}
-		sock.ev.on('group-participants.update', async (anu) => {
+		conn.ev.on('group-participants.update', async (anu) => {
 		if (!welkom.includes(anu.jid)) return
 		try {
 			const mdata = await conn.groupMetadata(anu.jid)
