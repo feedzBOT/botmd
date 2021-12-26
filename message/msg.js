@@ -1215,9 +1215,7 @@ ${tu}`
                 if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
                 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 	  	if (mentioned.length !== 0){                              
-                conn.groupParticipantsUpdate(from, mentioned, 'add') 
-                then((res) => reply(jsonformat(res)))
-                .catch((err) => reply(jsonformat(err)))                            
+                conn.groupParticipantsUpdate(from, mentioned, 'add')                             
                 } else {
                 reply(`tag atau nomor atau reply pesan orang yang ingin di tambahkan!`)
                 }
