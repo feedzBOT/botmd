@@ -1109,15 +1109,15 @@ ${tu}`
 			    case prefix+'tagall': case prefix+'infoall':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-			    members_sender = []
+			    members_id = []
 					teks = (args.length > 1) ? body.slice(8).trim() : ''
 					teks += '\n\n'
-					for (let mem of groupMembers) {
-						teks += `*#* @${mem.sender.split('@')[0]}\n`
-						members_sender.push(mem.sender)
+					for (let anu of groupMembers) {
+						teks += `*#* @${anu.jid.split('@')[0]}\n`
+						members_id.push(anu.jid)
 					}
-					mentions(teks, members_sender, true)
-					break
+					mentions(teks, members_id, true)
+                                        break
             case prefix+'infogrup':
             case prefix+'infogrouup':
             case prefix+'grupinfo':
