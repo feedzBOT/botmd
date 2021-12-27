@@ -1109,14 +1109,15 @@ ${tu}`
 			    case prefix+'tagall': case prefix+'infoall':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-			    let arr = [];
-              let txti = `*[ WhatsApp Bot ]*\n${q ? q : ''}\n`
-              for (let i of groupMembers){
-              txti += `=> @${i.jid.split("@")[0]}\n`
-              arr.push(i.jid)
-}
-              mentions(txti, arr, true)
-              break
+			    members_sender = []
+					teks = (args.length > 1) ? body.slice(8).trim() : ''
+					teks += '\n\n'
+					for (let mem of groupMembers) {
+						teks += `*#* @${mem.sender.split('@')[0]}\n`
+						members_sender.push(mem.sender)
+					}
+					mentions(teks, members_sender, true)
+					break
             case prefix+'infogrup':
             case prefix+'infogrouup':
             case prefix+'grupinfo':
