@@ -296,28 +296,7 @@ module.exports = async(conn, msg, m, setting, db) => {
                 reply(`*「 NOMOR LINK DETECTOR 」*\n\nSepertinya kamu mengirimkan link nomor, maaf kamu akan di kick`)
                 conn.groupParticipantsUpdate(from, [sender], 'remove')
             }
-        }       
-	conn.ev.on('group-participants.update', async (anu) => {
-        console.log(anu)
-        try {
-            let metadata = await conn.groupMetadata(anu.jid)
-            let participants = anu.participants
-            for (let num of participants) {               
-                try {
-                   var ppuser = await conn.profilePictureUrl(num, 'image')
-                } catch {
-                   var ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }                          
-                if (anu.action == 'add') {
-                conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Selamat Datang *@${num.split("@")[0]}*\nDi Group ${metadata.subject}\n\nSilahkan isi data di bawah ini untuk memperkenalkan diri 👑🤯🗿\n\n📌*Nama*:\n📌*Umur*:\n📌*Kelas*:\n📌*Askot*:\n📌*Gender*:\n\n*Selamat Bergabung semoga betah*` })
-                } else if (anu.action == 'remove') {
-                conn.sendMessage(anu.id, { image: { url: `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppuser}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d` }, contextInfo: { mentionedJid: [num] }, caption: `Beban group keluar *@${num.split("@")[0]}* Dari group ${metadata.subject}` })
-		}
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    })
+        }       	
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
@@ -1126,38 +1105,19 @@ ${tu}`
 			    let mem = [];
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
-			    break
-			    case prefix+'welcome':
-			if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
-			if (!isBotGroupAdmins) return reply(mess.GrupAdmin)
-			if (!isGroup) return reply(mess.OnlyGrup)
-			if (q == '1') {
-				var deta = await db.showdata('welcome', {
-					id: from
-				})
-				try {
-					if (deta[0].id === from) return reply('feature welcome is activated!!')
-				} catch {}
-				db.adddata('welcome', {
-					id: from
-				})
-				reply(`successfully activated feature welcome in group!`)
-			} else if (q == '0') {
-				var deta = await db.showdata('welcome', {
-					id: from
-				})
-				try {
-					if (deta[0].id === from) {
-						db.delete('welcome', {
-							id: from
-						})
-						reply('successfully disabled feature welcome in group!')
+			    break		
+			    case prefix+'tagall': case prefix+'infoall':
+			    if (!isGroup) return reply(mess.OnlyGrup)
+				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
+			    members_id = []
+					teks = (args.length > 1) ? body.slice(8).trim() : ''
+					teks += '\n\n'
+					for (let mem of groupMembers) {
+						teks += `*🐥* @${mem.jid.split('@')[0]}\n`
+						members_id.push(mem.jid)
 					}
-				} catch {
-					reply('feature welcome is not activated!')
-				}
-			}
-			break
+					mentions(teks, members_id, true)
+					break    
             case prefix+'infogrup':
             case prefix+'infogrouup':
             case prefix+'grupinfo':
