@@ -98,16 +98,22 @@ const connectToWhatsApp = async () => {
         try {
             let metadata = await conn.groupMetadata(anu.id)
             let participants = anu.participants
-            for (let num of participants) {             
+            for (let num of participants) {
+                // Get Profile Picture User
                 try {
                    var ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
 		} catch {
-		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
-			}              
+		   var ppimg = 'https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=https://e.top4top.io/p_1837nveac0.jpg&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'   
+					}              
                 if (anu.action == 'add') {
-                conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
+                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
+                  try {
+                   var ppuser = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+		} catch {
+		   var ppuser = 'https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=https://e.top4top.io/p_1837nveac0.jpg&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'   
+					}
                 } else if (anu.action == 'remove') {
-                conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
+                    conn.sendMessage(metadata.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
                 }
             }
         } catch (err) {
