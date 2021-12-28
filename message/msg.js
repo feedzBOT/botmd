@@ -1116,6 +1116,16 @@ ${tu}`
                 }
                 mentions(txti, arr, true)
                 break
+                case prefix+'listadmin': case prefix+'admin':
+                if (!isGroup) return reply (mess.Only.Grup)
+                teks = `List admin of group *${groupMetadata.subject}*\nTotal : ${groupAdmins.length}\n\n`
+		no = 0
+		for (let admon of groupAdmins) {
+		no += 1
+		teks += `[${no.toString()}] @${admon.split('@')[0]}\n`
+		}
+		mentions(teks, groupAdmins, true)
+                break            
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
