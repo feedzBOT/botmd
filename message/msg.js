@@ -1120,6 +1120,7 @@ ${tu}`
 		contextInfo: {
 			mentionedJid: users
 		}
+           	})
             break
             case prefix+'infogrup':
             case prefix+'infogrouup':
