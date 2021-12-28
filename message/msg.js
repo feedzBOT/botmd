@@ -1118,17 +1118,17 @@ ${tu}`
                 mentions(txti, arr, true)
                 break
             case prefix+'infogrup':
-            case prefix+'infogrouup':
+            case prefix+'infogc':
             case prefix+'grupinfo':
             case prefix+'groupinfo':
                 if (!isGroup) return reply(mess.OnlyGrup)             
                  try {
                     var pic = await conn.getProfilePicture(from)
                 } catch {
-                    var pic = './media/luffy.jpg'
+                    var pic = 'https://i.ibb.co/NthF8ds/IMG-20201223-WA0740.jpg'
                 }
                 let ingfo = `*I N G F O G R O U P*\n\n*Name :* ${groupName}\n*Owner Grup :* @${groupMetadata.owner.split('@')[0]}\n*Jumlah Peserta :* ${groupMembers.length}\n*Desc :* \n${groupMetadata.desc}`
-                conn.sendMessage(from, await getBuffer(pic), './media/luffy.jpg', {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
+                conn.sendMessage(from, await getBuffer(pic), 'https://i.ibb.co/NthF8ds/IMG-20201223-WA0740.jpg', {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
                 break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
