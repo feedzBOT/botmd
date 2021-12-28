@@ -1123,11 +1123,11 @@ ${tu}`
             case prefix+'groupinfo':
                 if (!isGroup) return reply(mess.OnlyGrup)             
                  try {
-                    var pic = await conn.getProfilePicture(m.chat)
+                    var pic = await conn.getProfilePicture(from)
                 } catch {
                     var pic = './media/luffy.jpg'
                 }
-                let ingfo = `*I N G F O G R O U P*\n\n*Name :* ${groupName}\n*ID Grup :* ${from}\n*Dibuat :* ${moment(`${groupMetadata.creation}` * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n*Owner Grup :* @${groupMetadata.owner.split('@')[0]}\n*Jumlah Admin :* ${groupAdmins.length}\n*Jumlah Peserta :* ${groupMembers.length}\n*Desc :* \n${groupMetadata.desc}`
+                let ingfo = `*I N G F O G R O U P*\n\n*Name :* ${groupName}\n*Owner Grup :* @${groupMetadata.owner.split('@')[0]}\n*Jumlah Peserta :* ${groupMembers.length}\n*Desc :* \n${groupMetadata.desc}`
                 conn.sendMessage(from, await getBuffer(pic), './media/luffy.jpg', {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
                 break
                 case prefix+'kick':
