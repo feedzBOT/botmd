@@ -1112,7 +1112,7 @@ ${tu}`
 			    let arr = [];
                 let txti = `*[ TAG ALL ]*\n\n${q ? q : ''}\n\n`
                 for (let i of groupMembers){
-                    txti += `=> @${i.id.split("@")[0]}\n`
+                    txti += `🐥 @${i.id.split("@")[0]}\n`
                     arr.push(i.id)
                 }
                 mentions(txti, arr, true)
@@ -1121,14 +1121,14 @@ ${tu}`
             case prefix+'infogrouup':
             case prefix+'grupinfo':
             case prefix+'groupinfo':
-                if (!isGroup) return reply(mess.OnlyGrup)
+                if (!isGroup) return reply(mess.OnlyGrup)             
                 try {
-                    var pic = await conn.getProfilePicture(from)
+                    var pic = await conn.getProfilePicture(m.chat)
                 } catch {
                     var pic = 'https://i.ibb.co/Tq7d7TZ/age-hananta-495-photo.png'
                 }
                 let ingfo = `*I N G F O G R O U P*\n\n*Name :* ${groupName}\n*ID Grup :* ${from}\n*Dibuat :* ${moment(`${groupMetadata.creation}` * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n*Owner Grup :* @${groupMetadata.owner.split('@')[0]}\n*Jumlah Admin :* ${groupAdmins.length}\n*Jumlah Peserta :* ${groupMembers.length}\n*Desc :* \n${groupMetadata.desc}`
-                conn.sendMessage(from, await getBuffer(pic), {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
+                conn.sendFile(from, await getBuffer(pic),  image, {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
                 break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
