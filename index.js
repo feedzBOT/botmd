@@ -105,11 +105,11 @@ const connectToWhatsApp = async () => {
 		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
 			}              
                 if (anu.action == 'add') {
-                    var well = `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d`
-                    conn.sendMessage(metadata.id, { image: { url: well }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
+                    var ysf = 'https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'
+                    conn.sendMessage(metadata.id, { image: { url: ysf }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
                 } else if (anu.action == 'remove') {
-                    var leftt = `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d`
-                    conn.sendMessage(metadata.id, { image: { url: leftt }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
+                    var hfz = 'https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'
+                    conn.sendMessage(metadata.id, { image: { url: hfz }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
                 }
             }
         } catch (err) {
