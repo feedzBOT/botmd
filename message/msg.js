@@ -59,7 +59,11 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
 		const content = JSON.stringify(msg.message)
 		const from = msg.key.remoteJid
-		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
+                const isMedia = (type === 'imageMessage' || type === 'videoMessage')
+                const isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
+		const isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
+		const isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
+	        const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
 		const messagesC = chats.slice(0).trim().split(/ +/).shift().toLowerCase()
                 const toJSON = j => JSON.stringify(j, null,'\t')
 		if (conn.multi) {
@@ -72,6 +76,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 			}
 		}		
 		const args = chats.split(' ')
+                const totalchat = await conn.chats.all()
 		const command = chats.toLowerCase().split(' ')[0] || ''
 		const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
@@ -1208,7 +1213,25 @@ ${tu}`
                     textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 }
 				break
-			default:
+                        case prefix+'bc:
+                        if (!isOwner) return reply(mess.OnlyOwner)
+                        if (args.length < 1) return reply('.......')
+					anu = await conn.chats.all()
+					if (isMedia && !msg.message.videoMessage || isQuotedImage) {
+						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+						buffer = await conn.downloadMediaMessage(encmedia)
+						for (let _ of anu) {
+							conn.sendMessage(_.jid, buffer, image, {caption: `[ Broadcast Bot ]\n\n${body.slice(4)}`})
+						}
+						reply('succes broadcast!')
+					} else {
+						for (let _ of anu) {
+							sendMess(_.jid, `[ *Broadcast Bot* ]\n\n${body.slice(4)}`)
+						}
+						reply('succes broadcast!')
+					}
+					break			
+                        default:
                         if (messagesC.includes(`salam`)) {
                         reply(`wa'alaikumsalam wr.wb.`)
                         }
