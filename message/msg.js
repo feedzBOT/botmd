@@ -1109,7 +1109,7 @@ ${tu}`
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
 			    let arr = [];
-                let txti = `*[ TAG ALL ]*\n\n${q ? q : ''}\n\n`
+                let txti = `*</ TAG ALL >*\n\n${q ? q : ''}\n\n`
                 for (let i of groupMembers){
                     txti += `🐥 @${i.id.split("@")[0]}\n`
                     arr.push(i.id)
@@ -1146,7 +1146,7 @@ ${tu}`
                 case prefix+'bc':
                 if (!isOwner) return reply(mess.OnlyOwner)
                 if (args.length < 2) return reply(`masukkan text`)
-                totalChat = await conn.chats.all()
+                var totalChat = await conn.chats.all()
                 let chiit = await totalChat
                 if (isImage || isQuotedImage) {
                     let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
