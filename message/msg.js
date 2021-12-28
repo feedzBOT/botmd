@@ -34,7 +34,6 @@ const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 // Exif
 const Exif = require("../lib/exif")
 const exif = new Exif()
-
 // DB Game
 let tictactoe = [];
 let tebakgambar = []
@@ -72,6 +71,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 			}
 		}		
 		const args = chats.split(' ')
+                const totalchat = await conn.chats.all()
 		const command = chats.toLowerCase().split(' ')[0] || ''
 		const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
@@ -1147,8 +1147,7 @@ ${tu}`
                 case prefix+'bc':
                 if (!isOwner) return reply(mess.OnlyOwner)
                 if (args.length < 2) return reply(`masukkan text`)
-                
-                let chiit = await conn.chats.split()
+                let chiit = await totalchat
                 if (isImage || isQuotedImage) {
                     let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
                     let media = await conn.downloadMediaMessage(encmedia)
