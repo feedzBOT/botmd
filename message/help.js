@@ -104,6 +104,7 @@ ${readmore}
   • ${prefix}antiwame on/off
 
 *</ OWNER MENU >*
+  • ${prefix}bc
   • ${prefix}setppbot
   • ${prefix}exif
   • ${prefix}leave
