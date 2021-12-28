@@ -574,7 +574,7 @@ ${tu}`
 case prefix+'tts':
 if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 if (args.length < 1) return conn.sendMessage(from, 'kode bahasanya mana om?', text, {quoted: msg})
-const gtts = require('./lib/gtts')(args[0])
+const gtts = require('../lib/gtts')(args[0])
 if (args.length < 2) return conn.sendMessage(from, 'text mana om', text, {quoted: msg})
 dtt = body.slice(9)
 ranm = getRandom('.mp3')
