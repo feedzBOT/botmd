@@ -58,13 +58,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 		let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
 		const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
 		const content = JSON.stringify(msg.message)
-		const from = msg.key.remoteJid
-                const isImage = (type === 'imageMessage')
-                const isVideo = (type === 'videoMessage')
-                const isSticker = (type == 'stickerMessage')
-                const isQuotedImage = isQuotedMsg ? (quotedMsg.type === 'imageMessage') ? true : false : false
-                const isQuotedVideo = isQuotedMsg ? (quotedMsg.type === 'videoMessage') ? true : false : false
-                const isQuotedSticker = isQuotedMsg ? (quotedMsg.type === 'stickerMessage') ? true : false : false		
+		const from = msg.key.remoteJid		
                 const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
 		const messagesC = chats.slice(0).trim().split(/ +/).shift().toLowerCase()
                 const toJSON = j => JSON.stringify(j, null,'\t')
