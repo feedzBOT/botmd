@@ -101,9 +101,9 @@ const connectToWhatsApp = async () => {
             for (let num of participants) {
                 // Get Profile Picture User
                 try {
-                    ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+                   var ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
 		} catch {
-		    ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
+		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
 					}              
                 if (anu.action == 'add') {
                     conn.sendMessage(mdata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `Welcome To ${metadata.subject} @${num.split("@")[0]}` })
