@@ -98,17 +98,18 @@ const connectToWhatsApp = async () => {
         try {
             let metadata = await conn.groupMetadata(anu.id)
             let participants = anu.participants
-            for (let num of participants) {
-                // Get Profile Picture User
+            for (let num of participants) {             
                 try {
                    var ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
 		} catch {
 		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
-					}              
+			}              
                 if (anu.action == 'add') {
-                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `Welcome To ${metadata.subject} @${num.split("@")[0]}` })
+                    var well = `https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d`
+                    conn.sendMessage(metadata.id, { image: { url: well }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
                 } else if (anu.action == 'remove') {
-                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} Leaving from ${metadata.subject}` })
+                    var leftt = `https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=${ppimg}&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d`
+                    conn.sendMessage(metadata.id, { image: { url: leftt }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
                 }
             }
         } catch (err) {
