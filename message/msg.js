@@ -1215,22 +1215,29 @@ ${tu}`
 				break
                         case prefix+'bc:
                         if (!isOwner) return reply(mess.OnlyOwner)
-                        if (args.length < 1) return reply('.......')
-					anu = await conn.chats.all()
-					if (isMedia && !msg.message.videoMessage || isQuotedImage) {
-						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
-						buffer = await conn.downloadMediaMessage(encmedia)
-						for (let _ of anu) {
-							conn.sendMessage(_.jid, buffer, image, {caption: `[ Broadcast Bot ]\n\n${body.slice(4)}`})
-						}
-						reply('succes broadcast!')
-					} else {
-						for (let _ of anu) {
-							sendMess(_.jid, `[ *Broadcast Bot* ]\n\n${body.slice(4)}`)
-						}
-						reply('succes broadcast!')
-					}
-					break			
+                        if (args.length < 2) return reply(`Masukkan text`)
+                let chiit = await conn.chats.all()
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, image, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else if (isVideo || isQuotedVideo) {
+                    let encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, video, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else {
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, q, text)
+                    }
+                    reply(`succes broadcast!`)
+                }
+                break			
                         default:
                         if (messagesC.includes(`salam`)) {
                         reply(`wa'alaikumsalam wr.wb.`)
