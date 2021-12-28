@@ -1128,7 +1128,7 @@ ${tu}`
                     var pic = './media/luffy.jpg'
                 }
                 let ingfo = `*I N G F O G R O U P*\n\n*Name :* ${groupName}\n*ID Grup :* ${from}\n*Dibuat :* ${moment(`${groupMetadata.creation}` * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n*Owner Grup :* @${groupMetadata.owner.split('@')[0]}\n*Jumlah Admin :* ${groupAdmins.length}\n*Jumlah Peserta :* ${groupMembers.length}\n*Desc :* \n${groupMetadata.desc}`
-                conn.sendFile(m.key.remoteJid, pic, 'luffy.jpg', {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
+                conn.sendFile(from, await getBuffer(pic), './media/luffy.jpg', {quoted: msg, caption: ingfo, contextInfo: {"mentionedJid": [groupMetadata.owner.replace('@c.us', '@s.whatsapp.net')]}})
                 break
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
