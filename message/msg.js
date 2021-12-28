@@ -1109,13 +1109,13 @@ ${tu}`
 			    case prefix+'tagall': case prefix+'infoall':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-			    let mem = [];
+			    let arr = [];
                 let txti = `*[ TAG ALL ]*\n\n${q ? q : ''}\n\n`
                 for (let i of groupMembers.map){
                     txti += `=> @${i.id.split("@")[0]}\n`
-                    mem.push(i.id)
+                    arr.push(i.id)
                 }
-                mentions(txti, mem, true)
+                mentions(txti, arr, true)
                 break
             case prefix+'infogrup':
             case prefix+'infogrouup':
