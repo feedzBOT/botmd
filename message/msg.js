@@ -577,8 +577,8 @@ if (args.length < 1) return conn.sendMessage(from, 'kode bahasanya mana om?', te
 const gtts = require('../lib/gtts')(args[0])
 if (args.length < 2) return conn.sendMessage(from, 'text mana om', text, {quoted: msg})
 var dtt = body.slice(9)
-ranm = getRandom('.mp3')
-rano = getRandom('.ogg')
+var ranm = getRandom('.mp3')
+var rano = getRandom('.ogg')
 dtt.length > 600
 ? reply('text kebanyakan kawand!!')
 : gtts.save(ranm, dtt, function() {
