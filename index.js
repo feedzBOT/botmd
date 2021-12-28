@@ -101,10 +101,9 @@ const connectToWhatsApp = async () => {
             for (let num of participants) {
                 // Get Profile Picture User
                 if (anu.action == 'add') {
-                    conn.sendMessage(anu.id, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
+                    conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
                 } else if (anu.action == 'remove') {
-                    conn.sendMessage(anu.id, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
-                }
+                    conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })           
             }
         } catch (err) {
             console.log(err)
