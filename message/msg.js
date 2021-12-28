@@ -1109,19 +1109,14 @@ ${tu}`
 			    case prefix+'tagall': case prefix+'infoall':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
-			    let user = global.db.data.users[m.sender]
-	/*     let [l, r] = text.split `|`
-	         if (!l) return conn.reply(m.chat, 'Silahkan masukan nama anda\ncontoh: *#tagall Udin|Woy nimbrunggg lah*', m)
-	    if (!r) return conn.reply(m.chat, 'Silahkan masukan pesan anda', m)*/
-
-	let users = participants.map(u => u.jid)
-	//  conn.reply(m.chat, '*「 TAG ALL 」*\n\n*Nama:* ' + l +  '\n*Pesan:* ' + r +'\n\n' + users.map(v => '@' + v.replace(/@.+/, '')).join`\n`, m, {
-	conn.reply(m.chat, '*「 TAG ALL 」*\n\n❖ ' + users.map(v => '@' + v.replace(/@.+/, '')).join`\n❖ `, m, {
-		contextInfo: {
-			mentionedJid: users
-		}
-           	})
-            break
+			    let mem = [];
+                let txti = `*[ TAG ALL ]*\n\n${q ? q : ''}\n\n`
+                for (let i of groupMembers.map){
+                    txti += `=> @${i.id.split("@")[0]}\n`
+                    mem.push(i.id)
+                }
+                mentions(txti, mem, true)
+                break
             case prefix+'infogrup':
             case prefix+'infogrouup':
             case prefix+'grupinfo':
