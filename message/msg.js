@@ -590,7 +590,8 @@ conn.sendMessage(from, bufferg, audio, {quoted: msg, ptt:true})
 fs.unlinkSync(rano)
 })
 })
-break			case prefix+'toimg': case prefix+'toimage':
+break			
+                        case prefix+'toimg': case prefix+'toimage':
 			case prefix+'tovid': case prefix+'tovideo':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedSticker) return reply(`Reply stikernya!`)
