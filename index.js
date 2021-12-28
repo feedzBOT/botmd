@@ -103,17 +103,12 @@ const connectToWhatsApp = async () => {
                 try {
                    var ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
 		} catch {
-		   var ppimg = 'https://adiofficial-api.herokuapp.com/api/welcome?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=https://e.top4top.io/p_1837nveac0.jpg&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'   
+		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
 					}              
                 if (anu.action == 'add') {
                     conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
-                  try {
-                   var ppuser = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
-		} catch {
-		   var ppuser = 'https://adiofficial-api.herokuapp.com/api/goodbye?nama=${num}&member=${metadata.participants.length}&gc=${metadata.subject}&pp=https://e.top4top.io/p_1837nveac0.jpg&bg=https://cdn.wallpapersafari.com/38/89/pZxtn4.jpg&apikey=gratis30d'   
-					}
                 } else if (anu.action == 'remove') {
-                    conn.sendMessage(metadata.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
+                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
                 }
             }
         } catch (err) {
