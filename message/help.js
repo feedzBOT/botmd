@@ -14,7 +14,7 @@ function toCommas(x) {
 	return x;
 }
 
-exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, ckreg, jumlahCommand, jumlahHarian) => {
+exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg) => {
 	return `*── 「 Simpel WhatsApp Bot 」 ──*
 
 _*${ucselamat} ${pushname !== undefined ? pushname : 'Kak'}*_
@@ -23,13 +23,12 @@ _*${ucselamat} ${pushname !== undefined ? pushname : 'Kak'}*_
 Library : *Baileys MD*
 Language : *Javascript*
 Platform : *Node.js*
-Database : *Mongodb*
+Database : *MongoDB*
 Versi Bot : *v0.0.2*
 Prefix : *「 ${prefix} 」*
 Status : *Aktif* || *Public*
+Total Hit : *${hit}*
 Total User : *${ckreg}*
-Total hit : *${jumlahCommand}*
-Total hit/days : *${jumlahHarian}*
 Tanggal : *${moment.tz('Asia/Jakarta').format('DD/MM/YY')}*
 Waktu : *${moment.tz('Asia/Jakarta').format('HH:mm:ss')}*
 
@@ -39,7 +38,7 @@ Balance : *$${toCommas(getBalance(sender, balance))}*
 Limit Harian : *${isOwner ? '-' : isPremium ? 'Unlimited' : getLimit(sender, limitCount, limit)}*
 Limit Game : *${isOwner ? '-' : cekGLimit(sender, gcount, glimit)}*
 
-*Hitung mundur Tahun baru*
+*hitung mundur tahun baru*
 _${tungmun}_
 ${readmore}
 *</ MAIN MENU >*
