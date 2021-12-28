@@ -20,7 +20,6 @@ const PORT = process.env.PORT || 3000
 const clui = require('clui')
 const { Spinner } = clui
 const db = require('./lib/database')
-const totalchat = await conn.chats.all()
 const { serialize } = require("./lib/myfunc");
 const { color, mylog, infolog } = require("./lib/color");
 const time = moment(new Date()).format('HH:mm:ss DD/MM/YYYY')
