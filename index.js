@@ -93,25 +93,25 @@ const connectToWhatsApp = async () => {
 		msg.isBaileys = msg.key.id.startsWith('BAE5') || msg.key.id.startsWith('3EB0')
 		require('./message/msg')(conn, msg, m, setting, db)
 	})
-        conn.ev.on('group-participants.update', async (anu) => {
-        console.log(anu)
-        try {
+            conn.ev.on('group-participants.update', async (anu) => {
+            console.log(anu)
+            try {
             let metadata = await conn.groupMetadata(anu.id)
             let participants = anu.participants
             for (let num of participants) {
-                // Get Profile Picture User
-                try {
-                   var ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
-		} catch {
-		   var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
-					}              
-                if (anu.action == 'add') {
-                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
-                } else if (anu.action == 'remove') {
-                    conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })
-                }
+            //Get Profile Picture User
+            try {
+            var ppimg = await conn.profilePictureUrl(num, 'image')
+            } catch {
+            var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
             }
-        } catch (err) {
+            if (anu.action == 'add') {
+            conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `ʜᴇʟʟᴏ *@${num.split("@")[0]}* ᴡᴇʟᴄᴏᴍᴇ ɪɴ ɢʀᴏᴜᴘ ${metadata.subject}\n\n[❕] isi data dibawah ini untuk memperkenalkan diri [❕]\n\n📌*𝔫𝔞𝔪𝔞*:\n📌*𝔲𝔪𝔲𝔯*:\n📌*𝔨𝔢𝔩𝔞𝔰*:\n📌*𝔞𝔰𝔞𝔩*:\n📌*𝔤𝔢𝔫𝔡𝔢𝔯*:\n\n*𝔰𝔢𝔩𝔞𝔪𝔞𝔱 𝔟𝔢𝔯𝔤𝔞𝔟𝔲𝔫𝔤 𝔡𝔞𝔫 𝔰𝔢𝔪𝔬𝔤𝔞 𝔟𝔢𝔱𝔞𝔥*` })
+            } else if (anu.action == 'remove') {
+            conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `ｂｙｅｅ👋 *@${num.split("@")[0]}* ｌｅａｖｉｎｇ ｆｒｏｍ ｇｒｏｕｐ ${metadata.subject}` })          
+            }
+            }
+            } catch (err) {
             console.log(err)
         }
     })
