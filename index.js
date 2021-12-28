@@ -106,7 +106,7 @@ const connectToWhatsApp = async () => {
             var ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'
             }
             if (anu.action == 'add') {
-            conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `ʜᴇʟʟᴏ *@${num.split("@")[0]}* ᴡᴇʟᴄᴏᴍᴇ ɪɴ ɢʀᴏᴜᴘ ${metadata.subject} [❕] isi data anda dibawah ini [❕]\n\n📍 *𝔫𝔞𝔪𝔞* :\n📍 *𝔲𝔪𝔲𝔯* :\n📍 *𝔨𝔢𝔩𝔞𝔰* :\n📍 *𝔞𝔰𝔞𝔩* :\n📍 *𝔤𝔢𝔫𝔡𝔢𝔯* :\n\n*𝔰𝔢𝔩𝔞𝔪𝔞𝔱 𝔟𝔢𝔯𝔤𝔞𝔟𝔲𝔫𝔤 𝔡𝔞𝔫 𝔰𝔢𝔪𝔬𝔤𝔞 𝔟𝔢𝔱𝔞𝔥*` })
+            conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `ʜᴇʟʟᴏ *@${num.split("@")[0]}* ᴡᴇʟᴄᴏᴍᴇ ɪɴ ɢʀᴏᴜᴘ ${metadata.subject}\n[❕] isi data anda dibawah ini [❕]\n\n📍 *𝔫𝔞𝔪𝔞* :\n📍 *𝔲𝔪𝔲𝔯* :\n📍 *𝔨𝔢𝔩𝔞𝔰* :\n📍 *𝔞𝔰𝔞𝔩* :\n📍 *𝔤𝔢𝔫𝔡𝔢𝔯* :\n\n*𝔰𝔢𝔩𝔞𝔪𝔞𝔱 𝔟𝔢𝔯𝔤𝔞𝔟𝔲𝔫𝔤 𝔡𝔞𝔫 𝔰𝔢𝔪𝔬𝔤𝔞 𝔟𝔢𝔱𝔞𝔥*` })
             } else if (anu.action == 'remove') {
             conn.sendMessage(metadata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `ｂｙｅｅ👋 *@${num.split("@")[0]}* ｌｅａｖｉｎｇ ｆｒｏｍ ｇｒｏｕｐ ${metadata.subject}` })          
             }
