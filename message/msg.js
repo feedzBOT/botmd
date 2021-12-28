@@ -1111,7 +1111,7 @@ ${tu}`
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
 			    let arr = [];
                 let txti = `*[ TAG ALL ]*\n\n${q ? q : ''}\n\n`
-                for (let i of groupMembers.map){
+                for (let i of groupMembers){
                     txti += `=> @${i.id.split("@")[0]}\n`
                     arr.push(i.id)
                 }
