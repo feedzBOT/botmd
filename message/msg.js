@@ -70,8 +70,7 @@ module.exports = async(conn, msg, m, setting, db) => {
 				prefix = conn.prefa
 			}
 		}		
-		const args = chats.split(' ')
-                const totalChat = await conn.chats.all()
+		const args = chats.split(' ')              
 		const command = chats.toLowerCase().split(' ')[0] || ''
 		const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
