@@ -104,6 +104,7 @@ const connectToWhatsApp = async () => {
                     conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
                 } else if (anu.action == 'remove') {
                     conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })           
+             }
             }
         } catch (err) {
             console.log(err)
