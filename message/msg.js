@@ -300,20 +300,11 @@ module.exports = async(conn, msg, m, setting, db) => {
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
-		
 		// total hit
 		if (isCmd) {
-			try {
-				hitp = words.filter(mek => mek === command)
-				if (hitp[0] === command && !command == '') {
-					db.adddata('hit', {
-						sender: sender,
-						chats: command
-					})
-				}
-			} catch {}
-		}
-		
+            axios.get('https://api.countapi.xyz/hit/BotAdi/visits').then(({data}) => hit.all = data.value)
+            axios.get(`https://api.countapi.xyz/hit/BotAdi${moment.tz('Asia/Jakarta').format('DDMMYYYY')}/visits`).then(({data}) => hit.today = data.value)
+        }
 		// Auto Registrasi	
 		if (isCmd) {
 			try {
@@ -391,15 +382,15 @@ module.exports = async(conn, msg, m, setting, db) => {
 
 		switch(command) {
 			// Main Menu
-                        case prefix+'menu':
-			case prefix+'help':
-		        var tothit = await db.showdata('hit')
-                        var hit = tothit.length
-                        var reg = await db.showdata('user')
-                        var ckreg = reg.length
-			var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg)
-			conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
-                        break
+case prefix+'menu':
+case prefix+'help':
+var jumlahCommand = require('util').inspect(hit.all)
+var jumlahHarian = require('util').inspect(hit.today)
+var reg = await db.showdata('user')
+var ckreg = reg.length
+var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, ckreg, jumlahCommand, jumlahHarian)
+conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
+break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
 			    break
