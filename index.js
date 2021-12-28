@@ -96,15 +96,21 @@ const connectToWhatsApp = async () => {
         conn.ev.on('group-participants.update', async (anu) => {
         console.log(anu)
         try {
-            let metadata = await conn.groupMetadata(anu.id)
+            let mdata = await conn.groupMetadata(anu.id)
             let participants = anu.participants
             for (let num of participants) {
                 // Get Profile Picture User
+                try {
+                    ppimg = await conn.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+		} catch {
+		    ppimg = 'https://e.top4top.io/p_1837nveac0.jpg'   
+					}              
                 if (anu.action == 'add') {
-                    conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `welcome to ${metadata.subject} @${num.split("@")[0]}` })
+                    conn.sendMessage(mdata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `Welcome To ${metadata.subject} @${num.split("@")[0]}` })
                 } else if (anu.action == 'remove') {
-                    conn.sendMessage(anu.id, { contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} leaving from ${metadata.subject}` })           
-             }
+                    conn.sendMessage(mdata.id, { image: { url: ppimg }, contextInfo: { mentionedJid: [num] }, caption: `@${num.split("@")[0]} Leaving from ${metadata.subject}` })
+                }
+            }
         } catch (err) {
             console.log(err)
         }
