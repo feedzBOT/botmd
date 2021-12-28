@@ -59,11 +59,13 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
 		const content = JSON.stringify(msg.message)
 		const from = msg.key.remoteJid
-                const isMedia = (type === 'imageMessage' || type === 'videoMessage')
-                const isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
-		const isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
-		const isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
-	        const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
+                const isImage = (type === 'imageMessage')
+                const isVideo = (type === 'videoMessage')
+                const isSticker = (type == 'stickerMessage')
+                const isQuotedImage = isQuotedMsg ? (quotedMsg.type === 'imageMessage') ? true : false : false
+                const isQuotedVideo = isQuotedMsg ? (quotedMsg.type === 'videoMessage') ? true : false : false
+                const isQuotedSticker = isQuotedMsg ? (quotedMsg.type === 'stickerMessage') ? true : false : false		
+                const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
 		const messagesC = chats.slice(0).trim().split(/ +/).shift().toLowerCase()
                 const toJSON = j => JSON.stringify(j, null,'\t')
 		if (conn.multi) {
@@ -1149,6 +1151,30 @@ ${tu}`
                 reply(`tag atau nomor atau reply pesan orang yang ingin di tambahkan!`)
                 }
                 break
+                case prefix+'bc':
+                if (!isOwner) return reply(mess.OnlyOwner)
+                if (args.length < 2) return reply(`masukkan text`)
+                let chiit = await conn.chats.all()
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, image, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else if (isVideo || isQuotedVideo) {
+                    let encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, video, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else {
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, q, text)
+                    }
+                    reply(`succes broadcast!`)
+                }
                 // Bank & Payment Menu
 		case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
@@ -1200,44 +1226,19 @@ ${tu}`
                 reply(monospace(`Pembeliaan game limit sebanyak ${args[1]} berhasil\n\nSisa Balance : $${getBalance(sender, balance)}\nSisa Game Limit : ${cekGLimit(sender, gcount, glimit)}/${gcount}`))
             }
                 break
-			case prefix+'limit': case prefix+'balance':
-			case prefix+'ceklimit': case prefix+'cekbalance':
-               if (mentioned.length !== 0){
+		case prefix+'limit': case prefix+'balance':
+		case prefix+'ceklimit': case prefix+'cekbalance':
+                if (mentioned.length !== 0){
 		var Ystatus = ownerNumber.includes(mentioned[0])
           	var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
-				    var ggcount = isPrim ? gcounti.prem : gcounti.user
-                    var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
-                    textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
+	        var ggcount = isPrim ? gcounti.prem : gcounti.user
+                var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
+                textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 } else {
-                    var limitPrib = `${getLimit(sender, limitCount, limit)}/${limitCount}`
-                    textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
+                var limitPrib = `${getLimit(sender, limitCount, limit)}/${limitCount}`
+                textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 }
-				break
-                        case prefix+'bc:
-                        if (!isOwner) return reply(mess.OnlyOwner)
-                        if (args.length < 2) return reply(`Masukkan text`)
-                let chiit = await conn.chats.all()
-                if (isImage || isQuotedImage) {
-                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
-                    let media = await conn.downloadMediaMessage(encmedia)
-                    for (let i of chiit){
-                        conn.sendMessage(i.jid, media, image, {caption: q})
-                    }
-                    reply(`succes broadcast!`)
-                } else if (isVideo || isQuotedVideo) {
-                    let encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
-                    let media = await conn.downloadMediaMessage(encmedia)
-                    for (let i of chiit){
-                        conn.sendMessage(i.jid, media, video, {caption: q})
-                    }
-                    reply(`succes broadcast!`)
-                } else {
-                    for (let i of chiit){
-                        conn.sendMessage(i.jid, q, text)
-                    }
-                    reply(`succes broadcast!`)
-                }
-                break			
+		break	
                         default:
                         if (messagesC.includes(`salam`)) {
                         reply(`wa'alaikumsalam wr.wb.`)
