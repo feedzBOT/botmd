@@ -576,7 +576,7 @@ if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit
 if (args.length < 1) return conn.sendMessage(from, 'kode bahasanya mana om?', text, {quoted: msg})
 const gtts = require('../lib/gtts')(args[0])
 if (args.length < 2) return conn.sendMessage(from, 'text mana om', text, {quoted: msg})
-dtt = body.slice(9)
+var dtt = body.slice(9)
 ranm = getRandom('.mp3')
 rano = getRandom('.ogg')
 dtt.length > 600
