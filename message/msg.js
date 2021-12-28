@@ -1147,8 +1147,8 @@ ${tu}`
                 case prefix+'bc':
                 if (!isOwner) return reply(mess.OnlyOwner)
                 if (args.length < 2) return reply(`masukkan text`)
-                const totalchat = await conn.chats.all()
-                let chiit = await conn.chats.all()
+                
+                let chiit = await conn.chats.split()
                 if (isImage || isQuotedImage) {
                     let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
                     let media = await conn.downloadMediaMessage(encmedia)
@@ -1169,6 +1169,7 @@ ${tu}`
                     }
                     reply(`succes broadcast!`)
                 }
+                break
                 // Bank & Payment Menu
 		case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
