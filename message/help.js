@@ -14,7 +14,7 @@ function toCommas(x) {
 	return x;
 }
 
-exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg) => {
+exports.allmenu = (sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, ckreg, jumlahCommand, jumlahHarian) => {
 	return `*── 「 Simpel WhatsApp Bot 」 ──*
 
 _*${ucselamat} ${pushname !== undefined ? pushname : 'Kak'}*_
@@ -27,8 +27,9 @@ Database : *Mongodb*
 Versi Bot : *v0.0.2*
 Prefix : *「 ${prefix} 」*
 Status : *Aktif* || *Public*
-Total Hit : *${hit}*
 Total User : *${ckreg}*
+Total hit : *${jumlahCommand}*
+Total hit/days : *${jumlahHarian}*
 Tanggal : *${moment.tz('Asia/Jakarta').format('DD/MM/YY')}*
 Waktu : *${moment.tz('Asia/Jakarta').format('HH:mm:ss')}*
 
@@ -76,7 +77,7 @@ ${readmore}
   • ${prefix}ytsearch
 
 *</ GAME MENU >*
-  • ${prefix}tictactoe [ERROR]
+  • ${prefix}tictactoe <eror>
   • ${prefix}delttc
   • ${prefix}tebakgambar
 
@@ -88,6 +89,9 @@ ${readmore}
   • ${prefix}balance
 
 *</ GROUP MENU >*
+  • ${prefix}add
+  • ${prefix}kick
+  • ${prefix}listadmin
   • ${prefix}linkgrup
   • ${prefix}setppgrup
   • ${prefix}setnamegc
@@ -96,11 +100,8 @@ ${readmore}
   • ${prefix}revoke
   • ${prefix}hidetag
   • ${prefix}tagall <text>
-  • ${prefix}add 
-  • ${prefix}kick
   • ${prefix}antilink on/off
   • ${prefix}antiwame on/off
-  • ${prefix}welcome 1/0
 
 *</ OWNER MENU >*
   • ${prefix}setppbot
