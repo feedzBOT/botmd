@@ -95,8 +95,12 @@ ${readmore}
   • ${prefix}group
   • ${prefix}revoke
   • ${prefix}hidetag
+  • ${prefix}tagall <text>
+  • ${prefix}add 
+  • ${prefix}kick
   • ${prefix}antilink on/off
   • ${prefix}antiwame on/off
+  • ${prefix}welcome 1/0
 
 *</ OWNER MENU >*
   • ${prefix}setppbot
