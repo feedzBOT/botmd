@@ -1147,6 +1147,7 @@ ${tu}`
                 case prefix+'bc':
                 if (!isOwner) return reply(mess.OnlyOwner)
                 if (args.length < 2) return reply(`masukkan text`)
+                const totalchat = await conn.chats.all()
                 let chiit = await conn.chats.all()
                 if (isImage || isQuotedImage) {
                     let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
