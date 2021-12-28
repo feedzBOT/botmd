@@ -1237,6 +1237,9 @@ ${tu}`
                         if (messagesC.includes(`salam`)) {
                         reply(`wa'alaikumsalam wr.wb.`)
                         }
+                        if (messagesC.includes(`${ownerNumber}`)) {
+                        reply(`ada apa manggil ownerku?`)
+                        }
                         if (messagesC.includes(`epi`)) {
                         reply(`bakar rumah kau biar rame!🔥`)
                         }                       
