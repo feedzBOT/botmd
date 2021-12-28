@@ -571,7 +571,26 @@ ${tu}`
 			       reply(`Kirim gambar/vidio dengan caption ${command} atau balas gambar/vidio yang sudah dikirim\nNote : Maximal vidio 10 detik!`)
 			    }
                 break
-			case prefix+'toimg': case prefix+'toimage':
+case prefix+'tts':
+if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+if (args.length < 1) return conn.sendMessage(from, 'kode bahasanya mana om?', text, {quoted: msg})
+const gtts = require('./lib/gtts')(args[0])
+if (args.length < 2) return conn.sendMessage(from, 'text mana om', text, {quoted: msg})
+dtt = body.slice(9)
+ranm = getRandom('.mp3')
+rano = getRandom('.ogg')
+dtt.length > 600
+? reply('text kebanyakan kawand!!')
+: gtts.save(ranm, dtt, function() {
+exec(`ffmpeg -i ${ranm} -ar 48000 -vn -c:a libopus ${rano}`, (err) => {
+fs.unlinkSync(ranm)
+bufferg = fs.readFileSync(rano)
+if (err) return reply('gagal bruhh!!')
+conn.sendMessage(from, bufferg, audio, {quoted: msg, ptt:true})
+fs.unlinkSync(rano)
+})
+})
+break			case prefix+'toimg': case prefix+'toimage':
 			case prefix+'tovid': case prefix+'tovideo':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedSticker) return reply(`Reply stikernya!`)
