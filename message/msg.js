@@ -207,9 +207,9 @@ module.exports = async(conn, msg, m, setting, db) => {
 			return arr[Math.floor(Math.random() * arr.length)]
 		}
                 const downloadM = async(save) => {
-encmedia = isQuotedSticker ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
-encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
-encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+var encmedia = isQuotedSticker ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+var ncmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+var encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
 if (save) return await conn.downloadAndSaveMediaMessage(encmedia)
 return await conn.downloadMediaMessage(encmedia)
   }		
