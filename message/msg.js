@@ -1144,7 +1144,21 @@ break
 		teks += `[${no.toString()}] @${admon.split('@')[0]}\n`
 		}
 		mentions(teks, groupAdmins, true)
-                break            
+                break      
+                case prefix+'sticktag': case prefix+'stiktag': case prefix+'stag':
+if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
+if (!isGroup) return reply(mess.OnlyGrup)
+if (!isSticker) return reply('reply stickernya!')
+teks = body.slice(9)
+stik = await downloadM()
+group = await conn.groupMetadata(from);
+member = group['participants']
+jids = []
+member.map( async adm => {
+jids.push(adm.id.replace('c.us', 's.whatsapp.net'))
+})
+conn.sendMessage(from, stik, sticker, {contexInfo: {mentionedJid: jids}, quoted: msg})
+break   
                 case prefix+'kick':
                 if (!isGroup) return reply(mess.OnlyGrup)
 	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
