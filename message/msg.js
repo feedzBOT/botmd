@@ -206,7 +206,14 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const pickRandom = (arr) => {
 			return arr[Math.floor(Math.random() * arr.length)]
 		}
-		function mentions(teks, mems = [], id) {
+                const downloadM = async(save) => {
+encmedia = isQuotedSticker ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+if (save) return await conn.downloadAndSaveMediaMessage(encmedia)
+return await conn.downloadMediaMessage(encmedia)
+  }		
+                       function mentions(teks, mems = [], id) {
 			if (id == null || id == undefined || id == false) {
 			  let res = conn.sendMessage(from, { text: teks, mentions: mems })
 			  return res
