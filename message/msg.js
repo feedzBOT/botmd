@@ -1187,11 +1187,17 @@ break
                 if (!isGroup) return reply(mess.OnlyGrup)
                 if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
                 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-	  	if (mentioned.length !== 0){                              
-                conn.groupParticipantsUpdate(from, mentioned, 'add')                             
-                } else {
-                reply(`tag atau nomor atau reply pesan orang yang ingin di tambahkan!`)
-                }
+	  	if (isQuotedMsg && args.length < 2) {
+                    conn.groupAdd(from, [quotedMsg.sender])
+                    .then((res) => reply(jsonformat(res)))
+                    .catch((err) => reply(jsonformat(err)))
+                } else if (args.length < 3 && !isNaN(args[1])){
+					conn.groupAdd(from, [args[1] + '@s.whatsapp.net'])
+					.then((res) => reply(jsonformat(res)))
+					.catch((err) => reply(jsonformat(err)))
+				} else {
+					reply()
+				}
                 break
                 case prefix+'bc':
                 if (!isOwner) return reply(mess.OnlyOwner)
