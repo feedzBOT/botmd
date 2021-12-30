@@ -1188,11 +1188,11 @@ break
                 if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
                 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 	  	if (isQuotedMsg && args.length < 2) {
-                    conn.groupAdd(from, [quotedMsg.sender])
+                    conn.groupParticipantsUpdate(from, quotedMsg, 'add')
                     .then((res) => reply(jsonformat(res)))
                     .catch((err) => reply(jsonformat(err)))
                 } else if (args.length < 3 && !isNaN(args[1])){
-					conn.groupAdd(from, [args[1] + '@s.whatsapp.net'])
+					conn.groupParticipantsUpdate(from, [args[1] + '@s.whatsapp.net'])
 					.then((res) => reply(jsonformat(res)))
 					.catch((err) => reply(jsonformat(err)))
 				} else {
