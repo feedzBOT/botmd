@@ -1,4 +1,4 @@
-"use strict";
+use strict";
 const {
 	downloadContentFromMessage
 } = require("@adiwajshing/baileys-md")
@@ -12,6 +12,7 @@ const { addPlayGame, getJawabanGame, isPlayGame, cekWaktuGame, getGamePosi } = r
 const tictac = require("../lib/tictac");
 const _prem = require("../lib/premium");
 const { tiktok } = require("../lib/tiktok");
+const { y2mateV, y2mateA } = require("../lib/ytdl");
 const fs = require ("fs");
 const moment = require("moment-timezone");
 const util = require("util");
@@ -29,11 +30,11 @@ const ms = require("parse-ms");
 
 // Correct
 const words = JSON.parse(fs.readFileSync('./src/correct.json'))
+const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 
 // Exif
 const Exif = require("../lib/exif")
 const exif = new Exif()
-
 // DB Game
 let tictactoe = [];
 let tebakgambar = []
@@ -57,9 +58,10 @@ module.exports = async(conn, msg, m, setting, db) => {
 		let dt = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
 		const ucapanWaktu = "Selamat "+dt.charAt(0).toUpperCase() + dt.slice(1)
 		const content = JSON.stringify(msg.message)
-		const from = msg.key.remoteJid
-		const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
-		const toJSON = j => JSON.stringify(j, null,'\t')
+		const from = msg.key.remoteJid		
+                const chats = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
+		const messagesC = chats.slice(0).trim().split(/ +/).shift().toLowerCase()
+                const toJSON = j => JSON.stringify(j, null,'\t')
 		if (conn.multi) {
 			var prefix = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/.test(chats) ? chats.match(/^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\/\\©^]/gi) : '#'
 		} else {
@@ -68,8 +70,8 @@ module.exports = async(conn, msg, m, setting, db) => {
 			} else {
 				prefix = conn.prefa
 			}
-		}
-		const args = chats.split(' ')
+		}		
+		const args = chats.split(' ')              
 		const command = chats.toLowerCase().split(' ')[0] || ''
 		const isCmd = command.startsWith(prefix)
 		const isGroup = msg.key.remoteJid.endsWith('@g.us')
@@ -85,7 +87,8 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const groupMembers = isGroup ? groupMetadata.participants : ''
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
-		const isGroupAdmins = groupAdmins.includes(sender)
+		const isGroupAdmins = groupAdmins.includes(sender)     
+		const isWelkom = isGroup ? welkom.includes(from) : false
 		const isPremium = isOwner ? true : _prem.checkPremiumUser(sender, premium)
 		const gcounti = setting.gcount
 		const gcount = isPremium ? gcounti.prem : gcounti.user
@@ -203,7 +206,14 @@ module.exports = async(conn, msg, m, setting, db) => {
 		const pickRandom = (arr) => {
 			return arr[Math.floor(Math.random() * arr.length)]
 		}
-		function mentions(teks, mems = [], id) {
+                const downloadM = async(save) => {
+var encmedia = isQuotedSticker ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+var ncmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo : msg
+var encmedia = JSON.parse(JSON.stringify(msg).replace('quotedM','m')).message.extendedTextMessage.contextInfo
+if (save) return await conn.downloadAndSaveMediaMessage(encmedia)
+return await conn.downloadMediaMessage(encmedia)
+  }		
+                       function mentions(teks, mems = [], id) {
 			if (id == null || id == undefined || id == false) {
 			  let res = conn.sendMessage(from, { text: teks, mentions: mems })
 			  return res
@@ -293,25 +303,22 @@ module.exports = async(conn, msg, m, setting, db) => {
                 reply(`*「 NOMOR LINK DETECTOR 」*\n\nSepertinya kamu mengirimkan link nomor, maaf kamu akan di kick`)
                 conn.groupParticipantsUpdate(from, [sender], 'remove')
             }
-        }
-		
+        }       	
 		// Auto Read & Presence Online
 		conn.sendReadReceipt(from, sender, [msg.key.id])
 		conn.sendPresenceUpdate('available', from)
-		
-		// total hit
-		if (isCmd) {
-			try {
-				hitp = words.filter(mek => mek === command)
-				if (hitp[0] === command && !command == '') {
-					db.adddata('hit', {
-						sender: sender,
-						chats: command
-					})
-				}
-			} catch {}
-		}
-		
+// total hit
+if (isCmd) {
+try {
+hitp = words.filter(mek => mek === command)
+if (hitp[0] === command && !command == '') {
+db.adddata('hit', {
+sender: sender,
+chats: command
+})
+}
+} catch {}
+}
 		// Auto Registrasi	
 		if (isCmd) {
 			try {
@@ -388,16 +395,16 @@ module.exports = async(conn, msg, m, setting, db) => {
 		}
 
 		switch(command) {
-			// Main Menu
-			case prefix+'menu':
-			case prefix+'help':
-			    var tothit = await db.showdata('hit')
-                            var hit = tothit.length
-                            var reg = await db.showdata('user')
-                            var ckreg = reg.length
-			    var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg)
-			    conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
-				break
+// Main Menu
+case prefix+'menu':
+case prefix+'help':
+var tothit = await db.showdata('hit')
+var hit = tothit.length
+var reg = await db.showdata('user')
+var ckreg = reg.length
+var teks = allmenu(sender, prefix, pushname, isOwner, isPremium, balance, limit, limitCount, glimit, gcount, ucselamat, tungmun, hit, ckreg)
+conn.sendMessage(from, { caption: teks, location: { jpegThumbnail: fs.readFileSync(setting.pathimg) }, templateButtons: buttonsDefault, footer: 'Bot WhatsApp Multi Device', mentions: [sender] })
+break
 			case prefix+'runtime':
 			    reply(runtime(process.uptime()))
 			    break
@@ -424,10 +431,10 @@ conn.sendMessage(from, { image: { url: gopeynya }, caption: teksnya }, { quoted:
                 break
 			case prefix+'owner':
 			    for (let x of ownerNumber) {
-			      sendContact(from, x.split('@s.whatsapp.net')[0], 'M imam Adi', msg)
-			      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu... jika kamu chat aneh² kek owner, owner tidak akan merespon'}, {quoted: res}))
-			    }
-			    break
+			      sendContact(from, x.split('@s.whatsapp.net')[0], 'hi feedz', msg)
+		      .then((res) => conn.sendMessage(from, { text: 'ini kak owner kuu...'}, {quoted: res}))
+                        }
+                        break
 			case prefix+'dashboard':
 			var hit_global = []
 			var hit_user = []
@@ -571,7 +578,27 @@ ${tu}`
 			       reply(`Kirim gambar/vidio dengan caption ${command} atau balas gambar/vidio yang sudah dikirim\nNote : Maximal vidio 10 detik!`)
 			    }
                 break
-			case prefix+'toimg': case prefix+'toimage':
+case prefix+'tts':
+if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+if (args.length < 1) return conn.sendMessage(from, 'kode bahasanya mana om?', text, {quoted: msg})
+const gtts = require('../lib/gtts')(args[0])
+if (args.length < 2) return conn.sendMessage(from, 'text mana om', text, {quoted: msg})
+var dtt = body.slice(9)
+var ranm = getRandom('.mp3')
+var rano = getRandom('.ogg')
+dtt.length > 600
+? reply('text kebanyakan kawand!!')
+: gtts.save(ranm, dtt, function() {
+exec(`ffmpeg -i ${ranm} -ar 48000 -vn -c:a libopus ${rano}`, (err) => {
+fs.unlinkSync(ranm)
+bufferg = fs.readFileSync(rano)
+if (err) return reply('gagal bruhh!!')
+conn.sendMessage(from, bufferg, audio, {quoted: msg, ptt:true})
+fs.unlinkSync(rano)
+})
+})
+break			
+                        case prefix+'toimg': case prefix+'toimage':
 			case prefix+'tovid': case prefix+'tovideo':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 			    if (!isQuotedSticker) return reply(`Reply stikernya!`)
@@ -646,12 +673,12 @@ ${tu}`
 			       limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 		        break
-            case prefix+'play':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+                case prefix+'play':
+	        if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
                 if (args.length < 2) return reply(`Kirim perintah ${command} query\nContoh : ${command} lily`)
                 reply(mess.wait)
                 await sendPlay(from, q)
-				limitAdd(sender, limit)
+		limitAdd(sender, limit)
                 break
 			case prefix+'ytmp4': case prefix+'mp4':
 			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
@@ -846,21 +873,21 @@ ${tu}`
 				limitAdd(sender, limit)
 				break
 			case prefix+'grupwa': case prefix+'searchgrup':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
-				if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
-				reply(mess.wait)
-			    hxz.linkwa(q).then(async(data) => {
-				  if (data.length == 0) return reply(`Grup ${q} tidak ditemukan`)
-				  var teks = `*Hasil Pencarian Dari ${q}*\n\n`
-				  for (let x of data) {
-					teks += `*Nama :* ${x.nama}\n*Link :* ${x.link}\n\n`
-				  }
-				  reply(teks)
-				  limitAdd(sender, limit)
-				}).catch(() => reply(mess.error.api))
-			    break
-			case prefix+'pinterest':
-			    if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
+			if (args.length < 2) return reply(`Kirim perintah ${command} nama grup`)
+			reply(mess.wait)
+			hxz.linkwa(q).then(async(data) => {
+		    if (data.length == 0) return reply(`Grup ${q} tidak ditemukan`)
+	        var teks = `*Hasil Pencarian Dari ${q}*\n\n`
+		    for (let x of data) {
+			teks += `*Nama :* ${x.nama}\n*Link :* ${x.link}\n\n`
+	        }
+		   reply(teks)
+	       limitAdd(sender, limit)
+	  	   }).catch(() => reply(mess.error.api))
+	       break
+	       case prefix+'pinterest':
+	       if (isLimit(sender, isPremium, isOwner, limitCount, limit)) return reply (`Limit kamu sudah habis silahkan kirim ${prefix}limit untuk mengecek limit`)
 				if (args.length < 2) return reply(`Kirim perintah ${command} query atau ${command} query --jumlah\nContoh :\n${command} cecan atau ${command} cecan --5`)
 				reply(mess.wait)
 			    var jumlah;
@@ -1014,7 +1041,7 @@ ${tu}`
 				db.adddata('antiwame', {
 					id: from
 				})
-				reply(`Succes Mengaktifkan Anti Wa.me`)
+				reply(`Succes Mengaktifkan Anti wa.me`)
 			} else if (q == 'off') {
 				var deta = await db.showdata('antiwame', {
 					id: from
@@ -1088,24 +1115,118 @@ ${tu}`
 				  reply(`Kirim perintah ${command} _options_\nOptions : close & open\nContoh : ${command} close`)
 				}
 			    break
-			case prefix+'revoke':
+			    case prefix+'revoke':
 			    if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins) return reply(mess.GrupAdmin)
 				if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 				await conn.groupRevokeInvite(from)
 			    .then( res => {
-				  reply(`Sukses menyetel tautan undangan grup ini`)
+			    reply(`Sukses menyetel tautan undangan grup ini`)
 				}).catch(() => reply(mess.error.api))
 				break
-			case prefix+'hidetag':
+			    case prefix+'hidetag':
 		        if (!isGroup) return reply(mess.OnlyGrup)
 				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
 			    let mem = [];
 		        groupMembers.map( i => mem.push(i.id) )
 				conn.sendMessage(from, { text: q ? q : '', mentions: mem })
-			    break
-			// Bank & Payment Menu
-			case prefix+'topbalance':{
+			    break		
+			    case prefix+'tagall': case prefix+'infoall':
+			    if (!isGroup) return reply(mess.OnlyGrup)
+				if (!isGroupAdmins && !isOwner) return reply(mess.GrupAdmin)
+			    let arr = [];
+                let txti = `*</ TAG ALL >*\n\n${q ? q : ''}\n\n`
+                for (let i of groupMembers){
+                    txti += `🐥 @${i.id.split("@")[0]}\n`
+                    arr.push(i.id)
+                }
+                mentions(txti, arr, true)
+                break
+                case prefix+'listadmin': case prefix+'admin':
+                if (!isGroup) return reply (mess.Only.Grup)
+                teks = `List admin of group *${groupMetadata.subject}*\nTotal : ${groupAdmins.length}\n\n`
+		var no = 0
+		for (let admon of groupAdmins) {
+		no += 1
+		teks += `[${no.toString()}] @${admon.split('@')[0]}\n`
+		}
+		mentions(teks, groupAdmins, true)
+                break      
+                case prefix+'sticktag': case prefix+'stiktag':case prefix+'stag':
+if (!isGroupAdmins && !isOwner) return reply(mess.BotAdmin)
+if (!isGroup) return reply(mess.OnlyGrup)
+if (!isQuotedSticker) return reply('reply stickernya!')
+teks = body.slice(9)
+stik = await downloadM()
+group = await conn.groupMetadata(from);
+member = group['participants']
+jids = []
+member.map( async adm => {
+jids.push(adm.id.replace('c.us', 's.whatsapp.net'))
+})
+conn.sendMessage(from, stik, sticker, {contexInfo: {mentionedJid: jids}, quoted: msg})
+break
+                case prefix+'kick':
+                if (!isGroup) return reply(mess.OnlyGrup)
+	        if (!isGroupAdmins) return reply(mess.GrupAdmin)
+	        if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+                if (mentioned.length !== 0){
+                conn.groupParticipantsUpdate(from, mentioned, 'remove')
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))
+                } else if (isQuotedMsg) {
+                if (quotedMsg.sender === ownerNumber) return reply(`tidak bisa kick owner`)
+                conn.groupParticipantsUpdate(from, mentioned, 'remove')
+                .then((res) => reply(jsonformat(res)))
+                .catch((err) => reply(jsonformat(err)))                  
+                } else {
+                reply(`tag atau nomor atau reply pesan orang yang ingin di kick!`)
+                }
+                break
+                case prefix+'add':
+                if (!isGroup) return reply(mess.OnlyGrup)
+                if (!isGroupAdmins && !isOwner)return reply(mess.GrupAdmin)
+                if (!isBotGroupAdmins) return reply(mess.BotAdmin)
+	  	if (isQuotedMsg && args.length < 2) {
+                    conn.groupParticipantsUpdate(from, [quotedMsg.sender], 'add')
+                    .then((res) => reply(jsonformat(res)))
+                    .catch((err) => reply(jsonformat(err)))
+                } else if (args.length < 3 && !isNaN(args[1])){
+					conn.groupParticipantsUpdate(from, [args[1] + '@s.whatsapp.net'])
+					.then((res) => reply(jsonformat(res)))
+					.catch((err) => reply(jsonformat(err)))
+				} else {
+					reply()
+				}
+                break
+                case prefix+'bc':
+                if (!isOwner) return reply(mess.OnlyOwner)
+                if (args.length < 2) return reply(`masukkan text`)
+                var totalChat = conn.chats.all()
+                let chiit = await totalChat
+                if (isImage || isQuotedImage) {
+                    let encmedia = isQuotedImage ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, image, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else if (isVideo || isQuotedVideo) {
+                    let encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
+                    let media = await conn.downloadMediaMessage(encmedia)
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, media, video, {caption: q})
+                    }
+                    reply(`succes broadcast!`)
+                } else {
+                    for (let i of chiit){
+                        conn.sendMessage(i.jid, q, text)
+                    }
+                    reply(`succes broadcast!`)
+                }
+                break
+                // Bank & Payment Menu
+		case prefix+'topbalance':{
                 balance.sort((a, b) => (a.balance < b.balance) ? 1 : -1)
                 let top = '*── 「 TOP BALANCE 」 ──*\n\n'
                 let arrTop = []
@@ -1155,25 +1276,28 @@ ${tu}`
                 reply(monospace(`Pembeliaan game limit sebanyak ${args[1]} berhasil\n\nSisa Balance : $${getBalance(sender, balance)}\nSisa Game Limit : ${cekGLimit(sender, gcount, glimit)}/${gcount}`))
             }
                 break
-			case prefix+'limit': case prefix+'balance':
-			case prefix+'ceklimit': case prefix+'cekbalance':
-			    if (mentioned.length !== 0){
-					var Ystatus = ownerNumber.includes(mentioned[0])
-					var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
-				    var ggcount = isPrim ? gcounti.prem : gcounti.user
-                    var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
-                    textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
+		case prefix+'limit': case prefix+'balance':
+		case prefix+'ceklimit': case prefix+'cekbalance':
+                if (mentioned.length !== 0){
+		var Ystatus = ownerNumber.includes(mentioned[0])
+          	var isPrim = Ystatus ? true : _prem.checkPremiumUser(mentioned[0], premium)
+	        var ggcount = isPrim ? gcounti.prem : gcounti.user
+                var limitMen = `${getLimit(mentioned[0], limitCount, limit)}`
+                textImg(`Limit : ${_prem.checkPremiumUser(mentioned[0], premium) ? 'Unlimited' : limitMen}/${limitCount}\nLimit Game : ${cekGLimit(mentioned[0], ggcount, glimit)}/${ggcount}\nBalance : $${getBalance(mentioned[0], balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 } else {
-                    var limitPrib = `${getLimit(sender, limitCount, limit)}/${limitCount}`
-                    textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
+                var limitPrib = `${getLimit(sender, limitCount, limit)}/${limitCount}`
+                textImg(`Limit : ${isPremium ? 'Unlimited' : limitPrib}\nLimit Game : ${cekGLimit(sender, gcount, glimit)}/${gcount}\nBalance : $${getBalance(sender, balance)}\n\nKamu dapat membeli limit dengan ${prefix}buylimit dan ${prefix}buyglimit untuk membeli game limit`)
                 }
-				break
-			default:
-			if (!isGroup && isCmd) {
-				reply(`sorry the ${command) feature is not in the menu`)
-			}
-		}
-	} catch (err) {
-		console.log(color('[ERROR]', 'red'), err)
+		break	
+                        default:
+                        if (messagesC.includes(`salam`)) {
+                        reply(`wa'alaikumsalam wr.wb.`)
+                        }                     
+                        if (messagesC.includes(`epi`)) {
+                        reply(`bakar rumah kau biar rame!🔥`)
+                        }                       
+                        }
+	                } catch (err) {
+		        console.log(color('[ERROR]', 'red'), err)
 	}
 }
