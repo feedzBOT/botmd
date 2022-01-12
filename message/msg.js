@@ -1,4 +1,4 @@
-use strict";
+"use strict";
 const {
 	downloadContentFromMessage
 } = require("@adiwajshing/baileys-md")
