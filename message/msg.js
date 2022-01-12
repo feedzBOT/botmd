@@ -351,8 +351,10 @@ chats: command
 		    tebakgambar.splice(getGamePosi(from, tebakgambar), 1)
 		  }
 		}
-
-		if (chats.startsWith("> ") && isOwner) {
+                if (chats.startsWith("@15058006472")){
+                reply("Ada apa kak?ada yg bisa Bot Bantu?ketik !menu untuk melihat fitur bot yg tersedia ya kak")
+                }	
+  	if (chats.startsWith("> ") && isOwner) {
 		console.log(color('[EVAL]'), color(moment(msg.messageTimestamp * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`Dari Owner aowkoakwoak`))
 		  const ev = (sul) => {
             var sat = JSON.stringify(sul, null, 2)
@@ -934,8 +936,8 @@ break
 				limitAdd(sender, limit)
 				}).catch(() => reply(mess.error.api))
 			    break
-			// Game Menu
-			case prefix+'tictactoe': case prefix+'ttt': case prefix+'ttc':
+			// Game Menu           		
+                case prefix+'tictactoe': case prefix+'ttt': case prefix+'ttc':
                 if (!isGroup)return reply(mess.OnlyGrup)
 			    if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
                 if (isTicTacToe(from, tictactoe)) return reply(`Masih ada game yg blum selesai`)
