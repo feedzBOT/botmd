@@ -34,7 +34,6 @@ const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 const Exif = require("../lib/exif")
 const exif = new Exif()
 // DB Game
-let tictactoe = [];
 let tebakgambar = []
 
 // Database
@@ -335,9 +334,6 @@ chats: command
 		}
 		// Premium
 		_prem.expiredCheck(conn, premium)
-
-		// Tictactoe
-		if (isTicTacToe(from, tictactoe)) tictac(chats, prefix, tictactoe, from, sender, reply, mentions, addBalance, balance)
 
         // Game
 		cekWaktuGame(conn, tebakgambar)
