@@ -7,9 +7,7 @@ const { getBuffer, fetchJson, fetchText, getRandom, getGroupAdmins, runtime, sle
 const { webp2mp4File } = require("../lib/convert")
 const { pinterest } = require("../lib/pinterest")
 const { isLimit, limitAdd, getLimit, giveLimit, addBalance, kurangBalance, getBalance, isGame, gameAdd, givegame, cekGLimit } = require("../lib/limit");
-const { isTicTacToe, getPosTic } = require("../lib/tictactoe");
 const { addPlayGame, getJawabanGame, isPlayGame, cekWaktuGame, getGamePosi } = require("../lib/game");
-const tictac = require("../lib/tictac");
 const _prem = require("../lib/premium");
 const { tiktok } = require("../lib/tiktok");
 const { y2mateV, y2mateA } = require("../lib/ytdl");
@@ -937,51 +935,6 @@ break
 				}).catch(() => reply(mess.error.api))
 			    break
 			// Game Menu           		
-                case prefix+'tictactoe': case prefix+'ttt': case prefix+'ttc':
-                if (!isGroup)return reply(mess.OnlyGrup)
-			    if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
-                if (isTicTacToe(from, tictactoe)) return reply(`Masih ada game yg blum selesai`)
-                if (args.length < 2) return reply(`Kirim perintah *${prefix}tictactoe* @tag`)
-                if (mentionByTag.length !== 1) {
-				if (mentionByTag[0] === botNumber) return reply(`Tidak bisa bermain dengan bot!`)
-                if (mentionByTag[0] === sender) return reply(`Sad amat main ama diri sendiri`)
-                     var hadiah = randomNomor(100, 150)
-				     mentions(monospace(`@${sender.split('@')[0]} menantang @${mentionByTag[0].split('@')[0]} untuk bermain TicTacToe\n\nKirim (Y/N) untuk bermain\n\nHadiah : ${hadiah} balance`), [sender, mentionByTag[0]], false)
-                     tictactoe.push({
-                        id: from,
-                        status: null,
-						hadiah: hadiah,
-                        penantang: sender,
-                        ditantang: mentionByTag[0],
-                        TicTacToe: ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣']
-                     })
-					 gameAdd(sender, limit)
-                } else {
-                    reply(`Kirim perintah *${prefix}tictactoe* @tag`)
-                }
-                break
-			case prefix+'delttt':
-            case prefix+'delttc':
-                if (!isGroup)return reply(mess.OnlyGrup)
-				if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
-                if (!isTicTacToe(from, tictactoe)) return reply(`Tidak ada sesi game tictactoe di grup ini`)
-                var posi = getPosTic(from, tictactoe)
-                if (tictactoe[posi].penantang.includes(sender)) {
-                    tictactoe.splice(posi, 1)
-                    reply(`Berhasil menghapus sesi tictactoe di grup ini`)
-                 } else if (tictactoe[posi].ditantang.includes(sender)) {
-                     tictactoe.splice(posi, 1)
-                     reply(`Berhasil menghapus sesi tictactoe di grup ini`)
-                 } else if (isGroupAdmins) {
-                     tictactoe.splice(posi, 1)
-                     reply(`Berhasil menghapus sesi tictactoe di grup ini`)
-                 } else if (isOwner) {
-                     tictactoe.splice(posi, 1)
-                     reply(`Berhasil menghapus sesi tictactoe di grup ini`)
-                 } else {
-                   reply(`Anda tidak bisa menghapus sesi tictactoe, karena bukan pemain!`)
-                }
-                break
 			case prefix+'tebakgambar':
 		        if (isGame(sender, isOwner, gcount, glimit)) return reply(`Limit game kamu sudah habis`)
 			    if (isPlayGame(from, tebakgambar)) return conn.reply(from, `Masih ada game yang belum diselesaikan`, tebakgambar[getGamePosi(from, tebakgambar)].msg)
