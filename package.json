@@ -13,7 +13,7 @@
   "author": "irfan",
   "license": "MIT",
   "dependencies": {
-    "@adiwajshing/baileys-md": "github:adiwajshing/baileys#multi-device",
+    "@adiwajshing/baileys": "github:adiwajshing/baileys",
     "awesome-phonenumber": "^2.64.0",
     "axios": "^0.24.0",
     "cheerio": "^1.0.0-rc.10",
