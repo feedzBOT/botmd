@@ -76,8 +76,6 @@ ${readmore}
   • ${prefix}ytsearch
 
 *</ GAME MENU >*
-  • ${prefix}tictactoe <eror>
-  • ${prefix}delttc
   • ${prefix}tebakgambar
 
 *</ LIMIT & BALANCE >*
