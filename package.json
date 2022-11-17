@@ -29,7 +29,7 @@
     "g-i-s": "^2.1.6",
     "hxz-api": "^1.0.1",
     "kotz-api": "^1.0.0",
-    "mongodb": "^4.1.2",
+    "mongodb": "^4.12.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "multistream": "^2.1.0",
