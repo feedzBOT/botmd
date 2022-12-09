@@ -17,7 +17,7 @@
     "awesome-phonenumber": "^2.64.0",
     "axios": "^0.24.0",
     "cheerio": "^1.0.0-rc.10",
-    "chalk": "^4.1.2",
+    "chalk": "^5.2.0",
     "clui": "^0.3.6",
     "express": "^4.17.1",
     "fetch": "^1.1.0",
