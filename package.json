@@ -22,7 +22,7 @@
     "express": "^4.17.1",
     "fetch": "^1.1.0",
     "figlet": "^1.5.2",
-    "file-type": "^16.5.3",
+    "file-type": "^18.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
